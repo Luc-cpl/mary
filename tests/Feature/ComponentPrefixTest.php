@@ -2,24 +2,85 @@
 
 use Illuminate\Support\Facades\Blade;
 use Livewire\Livewire;
+use Mary\Support\ClassCandidateExtractor;
 use Mary\Tests\Support\ComponentHarness;
 
-it('renders every component with its legacy unprefixed classes', function (string $component, string $template) {
+it('prefixes every rendered internal candidate while preserving the unprefixed output mode', function (string $component, string $template) {
+    static $candidates;
+
+    $candidates ??= ClassCandidateExtractor::fromPaths([
+        dirname(__DIR__, 2) . '/src/View/Components',
+        dirname(__DIR__, 2) . '/src/Traits/Toast.php',
+    ]);
+
+    $classContexts = static function (string $html): string {
+        $html = html_entity_decode($html, ENT_QUOTES | ENT_HTML5);
+        preg_match_all('/(?:^|\s)[^\s=]*class[^\s=]*=(["\'])(.*?)\1/si', $html, $attributes);
+        preg_match_all('/classList\.(?:add|remove)\(\s*(["\'])(.*?)\1/si', $html, $classListCalls);
+
+        return implode("\n", [...$attributes[2], ...$classListCalls[2]]);
+    };
+
+    $containsToken = static function (string $contexts, string $candidate): bool {
+        $pattern = '/(?:^|[\s"\'=])'.preg_quote($candidate, '/') . '(?=$|[\s"\'<>;,)])/m';
+
+        return preg_match($pattern, $contexts) === 1;
+    };
+
     config()->set('mary.tailwind_prefix', null);
+    $unprefixed = Livewire::test(ComponentHarness::class, ['template' => $template])->html();
 
-    $html = Livewire::test(ComponentHarness::class, ['template' => $template])->html();
-
-    expect($html)->not->toContain('tw:')
-        ->and($html)->not->toBe('');
-})->with('components');
-
-it('renders every component with prefixed internal classes', function (string $component, string $template) {
     config()->set('mary.tailwind_prefix', 'tw');
+    $prefixed = Livewire::test(ComponentHarness::class, ['template' => $template])->html();
+    $unprefixedContexts = $classContexts($unprefixed);
+    $prefixedContexts = $classContexts($prefixed);
 
-    $html = Livewire::test(ComponentHarness::class, ['template' => $template])->html();
+    $renderedCandidates = array_values(array_filter(
+        $candidates,
+        fn (string $candidate): bool => $containsToken($unprefixedContexts, $candidate)
+    ));
 
-    expect($html)->toContain('tw:');
+    expect($unprefixed)->not->toBe('')
+        ->and($renderedCandidates)->not->toBeEmpty();
+
+    foreach ($renderedCandidates as $candidate) {
+        expect($containsToken($prefixedContexts, 'tw:'.$candidate))
+            ->toBeTrue("[{$component}] Missing prefixed candidate [tw:{$candidate}].")
+            ->and($containsToken($prefixedContexts, $candidate))
+            ->toBeFalse("[{$component}] Internal candidate remained unprefixed [{$candidate}].");
+    }
+
+    expect($component)->not->toBe('');
 })->with('components');
+
+it('prefixes calendar classes embedded in setup JSON and popup markup', function () {
+    $events = [[
+        'date' => '2026-08-09',
+        'label' => 'Event',
+        'description' => 'Description',
+        'css' => 'consumer-event',
+    ]];
+
+    config()->set('mary.tailwind_prefix', null);
+    $unprefixed = html_entity_decode(
+        Blade::render('<x-calendar :events="$events" />', ['events' => $events]),
+        ENT_QUOTES | ENT_HTML5
+    );
+
+    config()->set('mary.tailwind_prefix', 'tw');
+    $prefixed = html_entity_decode(
+        Blade::render('<x-calendar :events="$events" />', ['events' => $events]),
+        ENT_QUOTES | ENT_HTML5
+    );
+
+    expect($unprefixed)->toContain('vc w-fit', 'vc-grid justify-center', 'vc-column !min-w-fit !max-w-fit')
+        ->toContain('my-3 last:hidden')
+        ->and($prefixed)->toContain('vc tw:w-fit', 'vc-grid tw:justify-center')
+        ->toContain('vc-column tw:!min-w-fit tw:!max-w-fit')
+        ->toContain('tw:my-3 tw:last:hidden')
+        ->not->toContain('vc w-fit')
+        ->not->toContain('my-3 last:hidden');
+});
 
 it('does not transform classes supplied by the application while merging attributes', function () {
     config()->set('mary.tailwind_prefix', 'tw');
@@ -84,7 +145,6 @@ dataset('components', function () {
         'badge' => ['badge', '<x-badge value="1" />'],
         'breadcrumbs' => ['breadcrumbs', '<x-breadcrumbs :items="[]" />'],
         'button' => ['button', '<x-button>Button</x-button>'],
-        'calendar' => ['calendar', '<x-calendar />'],
         'card' => ['card', '<x-card>Card</x-card>'],
         'carousel' => ['carousel', '<x-carousel :slides="[]" />'],
         'chart' => ['chart', '<x-chart wire:model="chart" />'],
