@@ -82,8 +82,10 @@ class ClassCandidateExtractor
     /** @return array<int, string> */
     private static function expressions(string $source): array
     {
+        $source = self::withoutComments($source);
+
         preg_match_all(
-            '/(?:Mary::classes|app\([\'\"]mary[\'\"]\)->classes|@maryClass|->maryClass)\s*\(/',
+            '/(?:Mary\s*::\s*classes|app\s*\(\s*[\'\"]mary[\'\"]\s*\)\s*->\s*classes|@maryClass|->\s*maryClass)\s*\(/',
             $source,
             $matches,
             PREG_OFFSET_CAPTURE
@@ -103,6 +105,32 @@ class ClassCandidateExtractor
         }
 
         return $expressions;
+    }
+
+    private static function withoutComments(string $source): string
+    {
+        $source = preg_replace_callback(
+            '/\{\{--.*?--\}\}|<!--.*?-->/s',
+            fn (array $match): string => preg_replace('/[^\r\n]/', ' ', $match[0]) ?? $match[0],
+            $source
+        ) ?? $source;
+
+        $sanitized = '';
+
+        foreach (token_get_all($source) as $token) {
+            if (! is_array($token)) {
+                $sanitized .= $token;
+
+                continue;
+            }
+
+            [$type, $contents] = $token;
+            $sanitized .= in_array($type, [T_COMMENT, T_DOC_COMMENT], true)
+                ? (preg_replace('/[^\r\n]/', ' ', $contents) ?? $contents)
+                : $contents;
+        }
+
+        return $sanitized;
     }
 
     /** @return array{string, int}|null */
@@ -157,6 +185,10 @@ class ClassCandidateExtractor
 
             $offset += 2;
 
+            while ($offset < $length && ctype_space($source[$offset])) {
+                $offset++;
+            }
+
             if (! preg_match('/\A([A-Za-z_][A-Za-z0-9_]*)\s*\(/', substr($source, $offset), $method)) {
                 break;
             }
@@ -185,6 +217,15 @@ class ClassCandidateExtractor
     {
         $expression = trim($expression);
 
+        if (($ternary = self::topLevelTernary($expression)) !== null) {
+            [$question, $colon] = $ternary;
+
+            return [
+                ...self::candidateLiterals(substr($expression, $question + 1, $colon - $question - 1)),
+                ...self::candidateLiterals(substr($expression, $colon + 1)),
+            ];
+        }
+
         if (! str_starts_with($expression, '[') || ! str_ends_with($expression, ']')) {
             return self::literals($expression);
         }
@@ -198,6 +239,83 @@ class ClassCandidateExtractor
         }
 
         return $literals;
+    }
+
+    /** @return array{int, int}|null */
+    private static function topLevelTernary(string $source): ?array
+    {
+        $round = 0;
+        $square = 0;
+        $curly = 0;
+        $quote = null;
+        $escaped = false;
+        $question = null;
+        $nested = 0;
+        $length = strlen($source);
+
+        for ($index = 0; $index < $length; $index++) {
+            $character = $source[$index];
+
+            if ($quote !== null) {
+                if ($escaped) {
+                    $escaped = false;
+                } elseif ($character === '\\') {
+                    $escaped = true;
+                } elseif ($character === $quote) {
+                    $quote = null;
+                }
+
+                continue;
+            }
+
+            if ($character === '\'' || $character === '"') {
+                $quote = $character;
+
+                continue;
+            }
+
+            match ($character) {
+                '(' => $round++,
+                ')' => $round--,
+                '[' => $square++,
+                ']' => $square--,
+                '{' => $curly++,
+                '}' => $curly--,
+                default => null,
+            };
+
+            if ($round !== 0 || $square !== 0 || $curly !== 0) {
+                continue;
+            }
+
+            if ($character === '?'
+                && ($source[$index - 1] ?? null) !== '?'
+                && ($source[$index + 1] ?? null) !== '?'
+                && substr($source, $index, 3) !== '?->') {
+                if ($question === null) {
+                    $question = $index;
+                } else {
+                    $nested++;
+                }
+
+                continue;
+            }
+
+            if ($question !== null
+                && $character === ':'
+                && ($source[$index - 1] ?? null) !== ':'
+                && ($source[$index + 1] ?? null) !== ':') {
+                if ($nested > 0) {
+                    $nested--;
+
+                    continue;
+                }
+
+                return [$question, $index];
+            }
+        }
+
+        return null;
     }
 
     /** @return array<int, string> */
