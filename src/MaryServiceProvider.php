@@ -9,6 +9,7 @@ use Illuminate\View\ComponentAttributeBag;
 use Mary\Console\Commands\MaryBootcampCommand;
 use Mary\Console\Commands\MaryBuildClassSourceCommand;
 use Mary\Console\Commands\MaryInstallCommand;
+use Mary\Support\ClassSourceRegistry;
 use Mary\View\Components\Accordion;
 use Mary\View\Components\Alert;
 use Mary\View\Components\Avatar;
@@ -90,7 +91,7 @@ class MaryServiceProvider extends ServiceProvider
         $this->registerComponents();
         $this->registerBladeDirectives();
 
-        $this->loadRoutesFrom(__DIR__ . '/../routes/web.php');
+        $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
 
         // Publishing is only necessary when using the CLI.
         if ($this->app->runningInConsole()) {
@@ -255,7 +256,15 @@ class MaryServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->mergeConfigFrom(__DIR__ . '/../config/mary.php', 'mary');
+        $this->mergeConfigFrom(__DIR__.'/../config/mary.php', 'mary');
+
+        $this->app->singleton(ClassSourceRegistry::class, function () {
+            return new ClassSourceRegistry([
+                __DIR__.'/View/Components',
+                __DIR__.'/Traits/Toast.php',
+                ...config('mary.class_source_paths', []),
+            ]);
+        });
 
         // Register the service the package provides.
         $this->app->singleton('mary', fn () => new Mary);

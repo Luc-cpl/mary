@@ -51,6 +51,13 @@ return [
     'class_source_path' => storage_path('framework/mary/classes.html'),
 
     /**
+     * Blade directories scanned for Mary class candidates.
+     */
+    'class_source_paths' => [
+        resource_path('views'),
+    ],
+
+    /**
      * Components settings
      */
     'components' => [

@@ -4,6 +4,9 @@ namespace Mary\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
+use Mary\ClassBuilder;
+use Mary\Support\ClassCandidateExtractor;
+use Mary\Support\ClassSourceRegistry;
 use RuntimeException;
 
 class MaryBuildClassSourceCommand extends Command
@@ -12,24 +15,30 @@ class MaryBuildClassSourceCommand extends Command
 
     protected $description = 'Generate the static HTML source for Mary CSS classes';
 
+    public function __construct(protected ClassSourceRegistry $classSources)
+    {
+        parent::__construct();
+    }
+
     public function handle(): int
     {
         $prefix = config('mary.tailwind_prefix');
 
-        if (filled($prefix) && ! preg_match('/^[a-z]+$/', $prefix)) {
-            $this->components->error('The Mary Tailwind prefix must contain lowercase ASCII letters only.');
+        if (($prefix !== null && ! is_string($prefix))
+            || (is_string($prefix) && trim($prefix) !== '' && ! preg_match('/^[a-z]+[:-]?$/', $prefix))) {
+            $this->components->error('The Mary Tailwind prefix must contain lowercase ASCII letters and may end with : or -.');
 
             return self::FAILURE;
         }
 
         $path = $this->resolvePath($this->option('path') ?: config('mary.class_source_path'));
-        $classes = File::lines(__DIR__.'/../../../resources/classes.txt')
-            ->map(fn (string $class): string => trim($class))
-            ->filter()
-            ->unique()
-            ->sort()
-            ->map(fn (string $class): string => filled($prefix) ? $prefix.':'.$class : $class)
-            ->implode("\n");
+        $builder = new ClassBuilder($prefix);
+        $classes = ClassCandidateExtractor::fromPaths($this->classSources->all());
+        $classes = array_map(
+            fn (string $class): string => (string) $builder->add($class),
+            $classes
+        );
+        $classes = implode("\n", $classes);
 
         File::ensureDirectoryExists(dirname($path));
 
