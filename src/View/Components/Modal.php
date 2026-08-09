@@ -57,7 +57,7 @@ class Modal extends Component
                         @endif
 
                         @if($title)
-                            <x-mary-header :title="$title" :subtitle="$subtitle" size="text-xl" :separator="$separator" class="{{ Mary::classes('!mb-5') }}" />
+                            <x-mary-header :title="$title" :subtitle="$subtitle" size="{{ Mary::classes('text-xl') }}" :separator="$separator" class="{{ Mary::classes('!mb-5') }}" />
                         @endif
 
                         <div>
