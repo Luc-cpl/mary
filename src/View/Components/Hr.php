@@ -14,7 +14,7 @@ class Hr extends Component
         public ?string $id = null,
         public ?string $target = null,
     ) {
-        $this->uuid = "mary" . md5(serialize($this)) . $id;
+        $this->uuid = 'mary' . md5(serialize($this)) . $id;
     }
 
     public function progressTarget(): ?string
@@ -29,10 +29,10 @@ class Hr extends Component
     public function render(): View|Closure|string
     {
         return <<<'HTML'
-                <div {{ $attributes->class("h-[2px] border-t-[length:var(--border)] border-t-base-content/10 my-5") }}>
+                <div {{ $attributes->class(Mary::classes("h-[2px] border-t-[length:var(--border)] border-t-base-content/10 my-5")) }}>
                     <progress
-                        class="progress progress-primary hidden h-[1px]"
-                        wire:loading.class="!h-[length:var(--border)] !block"
+                        class="{{ Mary::classes('progress progress-primary hidden h-[1px]') }}"
+                        wire:loading.class="{{ Mary::classes('!h-[length:var(--border)] !block') }}"
 
                         @if($progressTarget())
                             wire:target="{{ $progressTarget() }}"

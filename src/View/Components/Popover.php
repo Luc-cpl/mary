@@ -12,15 +12,15 @@ class Popover extends Component
 
     public function __construct(
         public ?string $id = null,
-        public ?string $position = "bottom",
-        public ?string $offset = "10",
+        public ?string $position = 'bottom',
+        public ?string $offset = '10',
 
         // Slots
         public mixed $trigger = null,
         public mixed $content = null
 
     ) {
-        $this->uuid = "mary" . md5(serialize($this)) . $id;
+        $this->uuid = 'mary' . md5(serialize($this)) . $id;
     }
 
     public function render(): View|Closure|string
@@ -45,7 +45,7 @@ class Popover extends Component
                     x-ref="myTrigger"
                     @mouseover="show()"
                     @mouseout="hide()"
-                    {{ $trigger->attributes->class(["w-fit cursor-pointer"]) }}
+                    {{ $trigger->attributes->maryClass(["w-fit cursor-pointer"]) }}
                   >
                     {{ $trigger }}
                   </div>
@@ -57,7 +57,7 @@ class Popover extends Component
                     x-transition
                     @mouseover="show()"
                     @mouseout="hide()"
-                    {{ $content->attributes->class(["z-[1] shadow-xl border-[length:var(--border)] border-base-content/10 w-fit p-3 rounded-md bg-base-100"]) }}
+                    {{ $content->attributes->maryClass(["z-[1] shadow-xl border-[length:var(--border)] border-base-content/10 w-fit p-3 rounded-md bg-base-100"]) }}
                   >
                     {{ $content }}
                   </div>

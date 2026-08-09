@@ -16,14 +16,14 @@ class Progress extends Component
         public ?float $max = 100,
         public ?bool $indeterminate = false,
     ) {
-        $this->uuid = "mary" . md5(serialize($this)) . $id;
+        $this->uuid = 'mary' . md5(serialize($this)) . $id;
     }
 
     public function render(): View|Closure|string
     {
         return <<<'HTML'
                 <progress
-                    {{ $attributes->class("progress") }}
+                    {{ $attributes->class(Mary::classes("progress")) }}
 
                     @if(!$indeterminate)
                         value="{{ $value }}"

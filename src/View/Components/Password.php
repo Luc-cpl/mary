@@ -17,13 +17,13 @@ class Password extends Component
         public ?string $icon = null,
         public ?string $iconRight = null,
         public ?string $hint = null,
-        public ?string $hintClass = 'fieldset-label',
+        public ?string $hintClass = null,
         public ?string $prefix = null,
         public ?string $suffix = null,
         public ?bool $inline = false,
         public ?bool $clearable = false,
         public ?string $popover = null,
-        public ?string $popoverIcon = "o-question-mark-circle",
+        public ?string $popoverIcon = 'o-question-mark-circle',
 
         // Password
         public ?string $passwordIcon = 'o-eye-slash',
@@ -38,20 +38,20 @@ class Password extends Component
 
         // Validations
         public ?string $errorField = null,
-        public ?string $errorClass = 'text-error',
+        public ?string $errorClass = null,
         public ?bool $omitError = false,
         public ?bool $firstErrorOnly = false,
     ) {
-        $this->uuid = "mary" . md5(serialize($this)) . $id;
+        $this->uuid = 'mary' . md5(serialize($this)) . $id;
 
         // Cannot use a left icon when password toggle should be shown on the left side.
         if (($this->icon && ! $this->right) && ! $this->onlyPassword) {
-            throw new Exception("Cannot use `icon` without providing `right` or `onlyPassword`.");
+            throw new Exception('Cannot use `icon` without providing `right` or `onlyPassword`.');
         }
 
         // Cannot use a right icon when password toggle should be shown on the right side.
         if (($this->iconRight && $this->right) && ! $this->onlyPassword) {
-            throw new Exception("Cannot use `iconRight` when providing `right` and not providing `onlyPassword`.");
+            throw new Exception('Cannot use `iconRight` when providing `right` and not providing `onlyPassword`.');
         }
     }
 
@@ -84,21 +84,21 @@ class Password extends Component
                     $uuid = $uuid . $modelName()
                 @endphp
 
-                <fieldset class="fieldset py-0">
+                <fieldset class="{{ Mary::classes('fieldset py-0') }}">
                     {{-- STANDARD LABEL --}}
                     @if($label && !$inline)
-                        <legend class="fieldset-legend mb-0.5">
+                        <legend class="{{ Mary::classes('fieldset-legend mb-0.5') }}">
                             {{ $label }}
 
                             @if($attributes->get('required'))
-                                <span class="text-error">*</span>
+                                <span class="{{ Mary::classes('text-error') }}">*</span>
                             @endif
 
                             {{-- INPUT POPOVER --}}
                             @if($popover)
                                 <x-mary-popover offset="5" position="top-start">
                                     <x-slot:trigger>
-                                        <x-mary-icon :name="$popoverIcon" class="w-4 h-4 opacity-40 mb-0.5" />
+                                        <x-mary-icon :name="$popoverIcon" class="{{ Mary::classes('w-4 h-4 opacity-40 mb-0.5') }}" />
                                     </x-slot:trigger>
                                     <x-slot:content>
                                         {{ $popover }}
@@ -108,19 +108,19 @@ class Password extends Component
                         </legend>
                     @endif
 
-                    <div @class(["floating-label" => $label && $inline])>
+                    <div @maryClass(["floating-label" => $label && $inline])>
                         {{-- FLOATING LABEL--}}
                         @if ($label && $inline)
-                            <span class="font-semibold">
+                            <span class="{{ Mary::classes('font-semibold') }}">
                                 {{ $label }}
 
                                 @if($attributes->get('required'))
-                                    <span class="text-error">*</span>
+                                    <span class="{{ Mary::classes('text-error') }}">*</span>
                                 @endif
                             </span>
                         @endif
 
-                        <div @class(["w-full", "join" => $prepend || $append])>
+                        <div @maryClass(["w-full", "join" => $prepend || $append])>
                             {{-- PREPEND --}}
                             @if($prepend)
                                 {{ $prepend }}
@@ -131,7 +131,7 @@ class Password extends Component
                                 x-data="{ hidden: true }"
 
                                 {{
-                                    $attributes->whereStartsWith('class')->class([
+                                    $attributes->whereStartsWith('class')->maryClass([
                                         "input w-full",
                                         "join-item" => $prepend || $append,
                                         "border-dashed" => $attributes->has("readonly") && $attributes->get("readonly") == true,
@@ -141,20 +141,20 @@ class Password extends Component
                              >
                                 {{-- PREFIX --}}
                                 @if($prefix)
-                                    <span class="label">{{ $prefix }}</span>
+                                    <span class="{{ Mary::classes('label') }}">{{ $prefix }}</span>
                                 @endif
 
                                 {{-- ICON LEFT / TOGGLE INPUT TYPE --}}
                                 @if($icon)
-                                    <x-mary-icon :name="$icon" class="pointer-events-none w-4 h-4 opacity-40" />
+                                    <x-mary-icon :name="$icon" class="{{ Mary::classes('pointer-events-none w-4 h-4 opacity-40') }}" />
                                 @elseif($placeToggleLeft())
                                     <x-mary-button
                                         x-on:click="hidden = !hidden"
-                                        class="btn-ghost btn-xs btn-circle -m-1"
+                                        class="{{ Mary::classes('btn-ghost btn-xs btn-circle -m-1') }}"
                                         :tabindex="$passwordIconTabindex ? null : -1"
                                     >
-                                        <x-mary-icon name="{{ $passwordIcon }}" x-show="hidden" class="w-4 h-4 opacity-40" />
-                                        <x-mary-icon name="{{ $passwordVisibleIcon }}" x-show="!hidden" x-cloak class="w-4 h-4 opacity-40" />
+                                        <x-mary-icon name="{{ $passwordIcon }}" x-show="hidden" class="{{ Mary::classes('w-4 h-4 opacity-40') }}" />
+                                        <x-mary-icon name="{{ $passwordVisibleIcon }}" x-show="!hidden" x-cloak class="{{ Mary::classes('w-4 h-4 opacity-40') }}" />
                                     </x-mary-button>
                                 @endif
 
@@ -173,26 +173,26 @@ class Password extends Component
 
                                 {{-- CLEAR ICON  --}}
                                 @if($clearable)
-                                    <x-mary-icon x-on:click="$wire.set('{{ $modelName() }}', '', {{ json_encode($attributes->wire('model')->hasModifier('live')) }})"  name="o-x-mark" class="cursor-pointer w-4 h-4 opacity-40"/>
+                                    <x-mary-icon x-on:click="$wire.set('{{ $modelName() }}', '', {{ json_encode($attributes->wire('model')->hasModifier('live')) }})"  name="o-x-mark" class="{{ Mary::classes('cursor-pointer w-4 h-4 opacity-40') }}"/>
                                 @endif
 
                                 {{-- ICON RIGHT / TOGGLE INPUT TYPE --}}
                                 @if($iconRight)
-                                    <x-mary-icon :name="$iconRight" @class(["pointer-events-none w-4 h-4 opacity-40", "!end-10" => $clearable]) />
+                                    <x-mary-icon :name="$iconRight" class="{{ Mary::classes(['pointer-events-none w-4 h-4 opacity-40', '!end-10' => $clearable]) }}" />
                                 @elseif($placeToggleRight())
                                     <x-mary-button
                                         x-on:click="hidden = !hidden"
-                                        @class(["btn-ghost btn-xs btn-circle -m-1", "!end-9" => $clearable])
+                                        class="{{ Mary::classes(['btn-ghost btn-xs btn-circle -m-1', '!end-9' => $clearable]) }}"
                                         :tabindex="$passwordIconTabindex ? null : -1"
                                     >
-                                        <x-mary-icon name="{{ $passwordIcon }}" x-show="hidden" class="w-4 h-4 opacity-40" />
-                                        <x-mary-icon name="{{ $passwordVisibleIcon }}" x-show="!hidden" x-cloak class="w-4 h-4 opacity-40" />
+                                        <x-mary-icon name="{{ $passwordIcon }}" x-show="hidden" class="{{ Mary::classes('w-4 h-4 opacity-40') }}" />
+                                        <x-mary-icon name="{{ $passwordVisibleIcon }}" x-show="!hidden" x-cloak class="{{ Mary::classes('w-4 h-4 opacity-40') }}" />
                                     </x-mary-button>
                                 @endif
 
                                 {{-- SUFFIX --}}
                                 @if($suffix)
-                                    <span class="label">{{ $suffix }}</span>
+                                    <span class="{{ Mary::classes('label') }}">{{ $suffix }}</span>
                                 @endif
                             </div>
 
@@ -205,14 +205,14 @@ class Password extends Component
 
                     {{-- HINT --}}
                     @if($hint)
-                        <div class="{{ $hintClass }}" x-classes="fieldset-label">{{ $hint }}</div>
+                        <div class="{{ is_null($hintClass) ? Mary::classes('fieldset-label') : Mary::classes()->addRaw($hintClass) }}" x-classes="{{ Mary::classes('fieldset-label') }}">{{ $hint }}</div>
                     @endif
 
                     {{-- ERROR --}}
                     @if(!$omitError && $errors->has($errorFieldName()))
                         @foreach($errors->get($errorFieldName()) as $message)
                             @foreach(Arr::wrap($message) as $line)
-                                <div class="{{ $errorClass }}" x-class="text-error">{{ $line }}</div>
+                                <div class="{{ is_null($errorClass) ? Mary::classes('text-error') : Mary::classes()->addRaw($errorClass) }}" x-class="{{ Mary::classes('text-error') }}">{{ $line }}</div>
                                 @break($firstErrorOnly)
                             @endforeach
                             @break($firstErrorOnly)

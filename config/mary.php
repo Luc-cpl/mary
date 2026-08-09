@@ -35,11 +35,27 @@ return [
     'route_prefix' => '',
 
     /**
+     * Tailwind CSS prefix.
+     *
+     * This value must match the prefix configured in your Tailwind import.
+     * For example, use `tw` here with `@import "tailwindcss" prefix(tw)`.
+     */
+    'tailwind_prefix' => null,
+
+    /**
+     * Generated class source consumed by Tailwind CSS.
+     *
+     * Use a path inside your repository if the frontend is built in an
+     * environment where PHP is not available.
+     */
+    'class_source_path' => storage_path('framework/mary/classes.html'),
+
+    /**
      * Components settings
      */
     'components' => [
         'spotlight' => [
             'class' => 'App\Support\Spotlight',
-        ]
-    ]
+        ],
+    ],
 ];

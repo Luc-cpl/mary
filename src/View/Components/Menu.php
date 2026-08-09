@@ -14,25 +14,25 @@ class Menu extends Component
         public ?string $id = null,
         public ?string $title = null,
         public ?string $icon = null,
-        public ?string $iconClasses = 'w-4 h-4',
+        public ?string $iconClasses = null,
         public ?bool $separator = false,
         public ?bool $activateByRoute = false,
-        public ?string $activeBgColor = 'bg-base-300',
+        public ?string $activeBgColor = null,
         public ?bool $horizontal = false
     ) {
-        $this->uuid = "mary" . md5(serialize($this)) . $id;
+        $this->uuid = 'mary' . md5(serialize($this)) . $id;
     }
 
     public function render(): View|Closure|string
     {
         return <<<'BLADE'
-                <ul {{ $attributes->class(["menu w-full", "menu-horizontal flex-nowrap overflow-x-auto scrollbar-none" => $horizontal]) }} >
+                <ul {{ $attributes->maryClass(["menu w-full", "menu-horizontal flex-nowrap overflow-x-auto scrollbar-none" => $horizontal]) }} >
                     @if($title)
-                        <li class="menu-title text-inherit uppercase">
-                            <div class="flex items-center gap-2">
+                        <li class="{{ Mary::classes('menu-title text-inherit uppercase') }}">
+                            <div class="{{ Mary::classes('flex items-center gap-2') }}">
 
                                 @if($icon)
-                                    <x-mary-icon :name="$icon" @class(['inline-flex', $iconClasses])  />
+                                    <x-mary-icon :name="$icon" class="{{ Mary::classes('inline-flex')->add(is_null($iconClasses) ? 'w-4 h-4' : null)->addRaw($iconClasses) }}" />
                                 @endif
 
                                 {{ $title }}
@@ -41,7 +41,7 @@ class Menu extends Component
                     @endif
 
                     @if($separator)
-                        <hr class="mb-3 border-t-[length:var(--border)] border-base-content/10" />
+                        <hr class="{{ Mary::classes('mb-3 border-t-[length:var(--border)] border-base-content/10') }}" />
                     @endif
 
                     {{ $slot }}

@@ -15,9 +15,9 @@ class Tabs extends Component
         public ?string $labelClass = null,
         public ?string $activeClass = null,
         public ?string $contentClass = null,
-        public string $tabsClass = 'scrollbar-none flex-nowrap overflow-x-auto',
+        public ?string $tabsClass = null,
     ) {
-        $this->uuid = "mary" . md5(serialize($this)) . $id;
+        $this->uuid = 'mary' . md5(serialize($this)) . $id;
     }
 
     public function uuid(): string
@@ -30,10 +30,10 @@ class Tabs extends Component
         return <<<'HTML'
                     <div
                         x-data="{ selected: @entangle($attributes->wire('model')) }"
-                        x-class="scrollbar-none flex-nowrap overflow-x-auto"
+                        x-class="{{ Mary::classes('scrollbar-none flex-nowrap overflow-x-auto') }}"
                     >
                         <!-- TABS -->
-                         <div id="{{ $uuid() }}-labels" wire:ignore {{ $attributes->except(['wire:model', 'wire:model.live'])->class(["tabs tabs-border", $tabsClass]) }}></div>
+                         <div id="{{ $uuid() }}-labels" wire:ignore {{ $attributes->except(['wire:model', 'wire:model.live'])->class(Mary::classes('tabs tabs-border')->add(is_null($tabsClass) ? 'scrollbar-none flex-nowrap overflow-x-auto' : null)->addRaw($tabsClass)) }}></div>
 
                         <!-- ORIGINAL DATA -->
                          <div>

@@ -25,7 +25,7 @@ class Stat extends Component
         public ?string $tooltipBottom = null,
 
     ) {
-        $this->uuid = "mary" . md5(serialize($this)) . $id;
+        $this->uuid = 'mary' . md5(serialize($this)) . $id;
         $this->tooltip = $this->tooltip ?? $this->tooltipLeft ?? $this->tooltipRight ?? $this->tooltipBottom;
         $this->tooltipPosition = $this->tooltipLeft ? 'lg:tooltip-left' : ($this->tooltipRight ? 'lg:tooltip-right' : ($this->tooltipBottom ? 'lg:tooltip-bottom' : 'lg:tooltip-top'));
     }
@@ -34,28 +34,28 @@ class Stat extends Component
     {
         return <<<'HTML'
                 <div
-                    {{ $attributes->class(["bg-base-100 rounded-lg px-5 py-4  w-full", "lg:tooltip $tooltipPosition" => $tooltip]) }}
+                    {{ $attributes->maryClass(["bg-base-100 rounded-lg px-5 py-4  w-full", "lg:tooltip $tooltipPosition" => $tooltip]) }}
 
                     @if($tooltip)
                         data-tip="{{ $tooltip }}"
                     @endif
                 >
-                    <div class="flex items-center gap-3">
+                    <div class="{{ Mary::classes('flex items-center gap-3') }}">
                         @if($icon)
-                            <div class="  {{ $color }}">
-                                <x-mary-icon :name="$icon" class="w-9 h-9" />
+                            <div class="{{ Mary::classes()->addRaw($color) }}">
+                                <x-mary-icon :name="$icon" class="{{ Mary::classes('w-9 h-9') }}" />
                             </div>
                         @endif
 
-                        <div class="text-left rtl:text-right truncate">
+                        <div class="{{ Mary::classes('text-left rtl:text-right truncate') }}">
                             @if($title)
-                                <div class="text-xs text-base-content/50 whitespace-nowrap">{{ $title }}</div>
+                                <div class="{{ Mary::classes('text-xs text-base-content/50 whitespace-nowrap') }}">{{ $title }}</div>
                             @endif
 
-                            <div class="font-black text-xl">{{ $value ?? $slot }}</div>
+                            <div class="{{ Mary::classes('font-black text-xl') }}">{{ $value ?? $slot }}</div>
 
                             @if($description)
-                                <div class="stat-desc">{{ $description }}</div>
+                                <div class="{{ Mary::classes('stat-desc') }}">{{ $description }}</div>
                             @endif
                         </div>
                     </div>

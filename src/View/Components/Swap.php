@@ -16,9 +16,9 @@ class Swap extends Component
         public ?string $false = null,
         public ?string $trueIcon = 'o-sun',
         public ?string $falseIcon = 'o-moon',
-        public ?string $iconSize = "h-5 w-5",
+        public ?string $iconSize = null,
     ) {
-        $this->uuid = "mary" . md5(serialize($this)) . $id;
+        $this->uuid = 'mary' . md5(serialize($this)) . $id;
     }
 
     public function render(): View|Closure|string
@@ -35,27 +35,27 @@ class Swap extends Component
                         </div>
                     @endif
 
-                    <div class="swap">
+                    <div class="{{ Mary::classes('swap') }}">
 
                         {{-- Hidden checkbox for state --}}
                         <input id="{{ $uuid }}" type="checkbox" {{ $attributes->wire('model') }} />
 
                         {{-- True Element --}}
                         @isset ($true)
-                            <div {{ is_string($true) ? new Illuminate\View\ComponentAttributeBag(['class' => 'swap-on']) : $true->attributes->merge(['class' => 'swap-on']) }}>
+                            <div {{ is_string($true) ? new Illuminate\View\ComponentAttributeBag(['class' => Mary::classes('swap-on')]) : $true->attributes->class(Mary::classes('swap-on')) }}>
                                 {{ $true ?? '' }}
                             </div>
                         @else
-                            <x-mary-icon :name="$trueIcon" class="swap-on {{ $iconSize }}" />
+                            <x-mary-icon :name="$trueIcon" class="{{ Mary::classes('swap-on')->add(is_null($iconSize) ? 'h-5 w-5' : null)->addRaw($iconSize) }}" />
                         @endif
 
                         {{-- False Element --}}
                         @isset ($false)
-                        <div {{ is_string($false) ? new Illuminate\View\ComponentAttributeBag(['class' => 'swap-off']) : $false->attributes->merge(['class' => 'swap-off']) }}>
+                        <div {{ is_string($false) ? new Illuminate\View\ComponentAttributeBag(['class' => Mary::classes('swap-off')]) : $false->attributes->class(Mary::classes('swap-off')) }}>
                                 {{ $false ?? '' }}
                             </div>
                         @else 
-                            <x-mary-icon :name="$falseIcon" class="swap-off {{ $iconSize }}" />
+                            <x-mary-icon :name="$falseIcon" class="{{ Mary::classes('swap-off')->add(is_null($iconSize) ? 'h-5 w-5' : null)->addRaw($iconSize) }}" />
                         @endif
 
                     </div>

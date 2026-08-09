@@ -13,7 +13,7 @@ class Kbd extends Component
     public function __construct(
         public ?string $id = null,
     ) {
-        $this->uuid = "mary" . md5(serialize($this)) . $id;
+        $this->uuid = 'mary' . md5(serialize($this)) . $id;
     }
 
     public function render(): View|Closure|string
@@ -21,7 +21,7 @@ class Kbd extends Component
         return <<<'HTML'
                 <kbd
                     wire:key="{{ $uuid }}"
-                    {{ $attributes->merge(["class" => "kbd"]) }}
+                    {{ $attributes->class(Mary::classes('kbd')) }}
                 >
                     {{ $slot }}
                 </kbd>

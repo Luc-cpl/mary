@@ -23,7 +23,7 @@ class Collapse extends Component
         public mixed $heading = null,
         public mixed $content = null,
     ) {
-        $this->uuid = "mary" . md5(serialize($this)) . $id;
+        $this->uuid = 'mary' . md5(serialize($this)) . $id;
     }
 
     public function progressTarget(): ?string
@@ -42,7 +42,7 @@ class Collapse extends Component
 
                 <div
                     {{
-                        $attributes->class([
+                        $attributes->maryClass([
                             'collapse border-[length:var(--border)] border-base-content/10',
                             'join-item' => !$noJoin,
                             'collapse-arrow' => !$collapsePlusMinus && !$noIcon,
@@ -60,23 +60,23 @@ class Collapse extends Component
                         @endif
 
                         <div
-                            {{ $heading->attributes->merge(["class" => "collapse-title font-semibold"]) }}
+                            {{ $heading->attributes->class(Mary::classes('collapse-title font-semibold')) }}
 
                             @if(isset($noJoin))
-                                :class="model == '{{ $name }}' && 'z-10'"
+                                :class="model == '{{ $name }}' && '{{ Mary::classes('z-10') }}'"
                                 @click="if (model == '{{ $name }}') model = null"
                             @endif
                         >
                             {{ $heading }}
                         </div>
-                        <div {{ $content->attributes->merge(["class" => "collapse-content"]) }} wire:key="content-{{ $uuid }}">
+                        <div {{ $content->attributes->class(Mary::classes('collapse-content')) }} wire:key="content-{{ $uuid }}">
                             @if($separator)
-                                <hr class="mb-3 border-t-[length:var(--border)] border-base-content/10" />
+                                <hr class="{{ Mary::classes('mb-3 border-t-[length:var(--border)] border-base-content/10') }}" />
 
                                 @if($progressIndicator)
-                                    <div class="h-0.5 -mt-6.5 mb-6.5">
+                                    <div class="{{ Mary::classes('h-0.5 -mt-6.5 mb-6.5') }}">
                                         <progress
-                                            class="progress progress-primary w-full h-0.5"
+                                            class="{{ Mary::classes('progress progress-primary w-full h-0.5') }}"
                                             wire:loading
 
                                             @if($progressTarget())

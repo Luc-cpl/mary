@@ -22,7 +22,7 @@ class Dropdown extends Component
         // Slots
         public mixed $trigger = null
     ) {
-        $this->uuid = "mary" . md5(serialize($this)) . $id;
+        $this->uuid = 'mary' . md5(serialize($this)) . $id;
     }
 
     public function render(): View|Closure|string
@@ -32,7 +32,7 @@ class Dropdown extends Component
                 x-data="{open: false}"
                 @click.outside="open = false"
                 :open="open"
-                @class([
+                @maryClass([
                     'overflow-visible',
                     'dropdown',
                     'dropdown-end' => ($noXAnchor && $right),
@@ -42,19 +42,19 @@ class Dropdown extends Component
             >
                 <!-- CUSTOM TRIGGER -->
                 @if($trigger)
-                    <summary x-ref="button" @click.prevent="open = !open" {{ $trigger->attributes->class(['list-none']) }}>
+                    <summary x-ref="button" @click.prevent="open = !open" {{ $trigger->attributes->maryClass(['list-none']) }}>
                         {{ $trigger }}
                     </summary>
                 @else
                     <!-- DEFAULT TRIGGER -->
-                    <summary x-ref="button" @click.prevent="open = !open" {{ $attributes->class(["btn"]) }}>
+                    <summary x-ref="button" @click.prevent="open = !open" {{ $attributes->maryClass(["btn"]) }}>
                         {{ $label }}
                         <x-mary-icon :name="$icon" />
                     </summary>
                 @endif
 
                 <ul
-                    @class([
+                    @maryClass([
                         'p-2','shadow','menu','z-[1]','border-[length:var(--border)]','border-base-content/10','bg-base-100', 'rounded-box','w-auto','min-w-max',
                         'dropdown-content' => $noXAnchor,
                         $maxHeight => $scroll,

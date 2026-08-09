@@ -38,7 +38,7 @@ class Table extends Component
         public ?array $cellDecoration = [],
         public ?bool $showEmptyText = false,
         public mixed $emptyText = 'No records found.',
-        public string $containerClass = 'overflow-x-auto',
+        public ?string $containerClass = null,
         public ?bool $noHover = false,
         public ?bool $fluent = false,
 
@@ -52,7 +52,7 @@ class Table extends Component
 
     ) {
         if ($this->selectable && $this->expandable) {
-            throw new Exception("You can not combine `expandable` with `selectable`.");
+            throw new Exception('You can not combine `expandable` with `selectable`.');
         }
 
         // Temp
@@ -66,7 +66,7 @@ class Table extends Component
         unset($this->headers);
 
         // Serialize
-        $this->uuid = "mary" . md5(serialize($this)) . $id;
+        $this->uuid = 'mary' . md5(serialize($this)) . $id;
 
         // Put them back
         $this->rowDecoration = $rowDecoration;
@@ -167,7 +167,7 @@ class Table extends Component
 
         // Replace tokens by actual row values
         $tokens->each(function (string $token) use ($row, &$link) {
-            $link = Str::of($link)->replace("{" . $token . "}", data_get($row, $token))->toString();
+            $link = Str::of($link)->replace('{' . $token . '}', data_get($row, $token))->toString();
         });
 
         return $link;
@@ -201,7 +201,7 @@ class Table extends Component
 
     public function selectableModifier(): string
     {
-        return is_string($this->getAllIds()[0] ?? null) ? "" : ".number";
+        return is_string($this->getAllIds()[0] ?? null) ? '' : '.number';
     }
 
     public function getKeyValue($row, $key): mixed
@@ -263,12 +263,12 @@ class Table extends Component
                                 }
                              }"
                 >
-                <div class="{{ $containerClass }}" x-classes="overflow-x-auto">
+                <div class="{{ is_null($containerClass) ? Mary::classes('overflow-x-auto') : Mary::classes()->addRaw($containerClass) }}" x-classes="{{ Mary::classes('overflow-x-auto') }}">
                 <table
                         {{
                             $attributes
                                 ->whereDoesntStartWith('wire:model')
-                                ->class([
+                                ->maryClass([
                                     'table',
                                     'table-zebra' => $striped,
                                     '[&_tr:nth-child(4n+3)]:bg-base-200' => $striped && $expandable,
@@ -277,15 +277,15 @@ class Table extends Component
                         }}
                     >
                         <!-- HEADERS -->
-                        <thead @class(["text-base-content", "hidden" => $noHeaders])>
+                        <thead @maryClass(["text-base-content", "hidden" => $noHeaders])>
                             <tr x-ref="headers">
                                 <!-- CHECKALL -->
                                 @if($selectable)
-                                    <th class="w-1" wire:key="{{ $uuid }}-checkall-{{ implode(',', $getAllIds()) }}">
+                                    <th class="{{ Mary::classes('w-1') }}" wire:key="{{ $uuid }}-checkall-{{ implode(',', $getAllIds()) }}">
                                         <input
                                             id="checkAll-{{ $uuid }}"
                                             type="checkbox"
-                                            class="checkbox checkbox-sm"
+                                            class="{{ Mary::classes('checkbox checkbox-sm') }}"
                                             x-ref="mainCheckbox"
                                             x-bind:disabled="pageIds.length === 0"
                                             @click="toggleCheckAll($el.checked)" />
@@ -294,7 +294,7 @@ class Table extends Component
 
                                 <!-- EXPAND EXTRA HEADER -->
                                 @if($expandable)
-                                    <th class="w-1"></th>
+                                    <th class="{{ Mary::classes('w-1') }}"></th>
                                  @endif
 
                                 @foreach($headers as $header)
@@ -308,7 +308,7 @@ class Table extends Component
                                     @endphp
 
                                     <th
-                                        class="@if($isSortable($header)) cursor-pointer hover:bg-base-200 @endif {{ $header['class'] ?? ' ' }}"
+                                        class="{{ Mary::classes(['cursor-pointer hover:bg-base-200' => $isSortable($header)])->addRaw($header['class'] ?? '') }}"
 
                                         @if($sortBy && $isSortable($header))
                                             @click="$wire.set('{{ $sortByProperty }}', {column: '{{ $getSort($header)['column'] }}', direction: '{{ $getSort($header)['direction'] }}' })"
@@ -317,14 +317,14 @@ class Table extends Component
                                         {{ isset(${"header_".$temp_key}) ? ${"header_".$temp_key}($header) : $header['label'] }}
 
                                         @if($isSortable($header))
-                                            <x-mary-icon :name="$isSortedBy($header) ? $getSort($header)['direction'] == 'asc' ? 'o-chevron-down' : 'o-chevron-up' : 'o-chevron-up-down'"  class="size-3! mb-1 ms-1" />
+                                            <x-mary-icon :name="$isSortedBy($header) ? $getSort($header)['direction'] == 'asc' ? 'o-chevron-down' : 'o-chevron-up' : 'o-chevron-up-down'"  class="{{ Mary::classes('size-3! mb-1 ms-1') }}" />
                                         @endif
                                     </th>
                                 @endforeach
 
                                 <!-- ACTIONS (Just a empty column) -->
                                 @if($actions)
-                                    <th class="w-1"></th>
+                                    <th class="{{ Mary::classes('w-1') }}"></th>
                                 @endif
                             </tr>
                         </thead>
@@ -334,18 +334,18 @@ class Table extends Component
                             @foreach($rows as $k => $row)
                                 <tr
                                     wire:key="{{ $uuid }}-{{ $k }}"
-                                    @class([$rowClasses($row), "hover:bg-base-200" => !$noHover])
+                                    class="{{ Mary::classes(['hover:bg-base-200' => ! $noHover])->addRaw($rowClasses($row)) }}"
                                     @if($attributes->has('@row-click'))
                                         @click="$dispatch('row-click', {{ json_encode($row) }});"
                                     @endif
                                 >
                                     <!-- CHECKBOX -->
                                     @if($selectable)
-                                        <td class="w-1">
+                                        <td class="{{ Mary::classes('w-1') }}">
                                             <input
                                                 id="checkbox-{{ $uuid }}-{{ $k }}"
                                                 type="checkbox"
-                                                class="checkbox checkbox-sm"
+                                                class="{{ Mary::classes('checkbox checkbox-sm') }}"
                                                 value="{{ data_get($row, $selectableKey) }}"
                                                 x-model{{ $selectableModifier() }}="selection"
                                                 @click.stop="toggleCheck($el.checked, {{ json_encode($row) }})" />
@@ -354,12 +354,12 @@ class Table extends Component
 
                                     <!-- EXPAND ICON -->
                                     @if($expandable)
-                                        <td class="w-1 pe-0 py-0">
+                                        <td class="{{ Mary::classes('w-1 pe-0 py-0') }}">
                                             @if(data_get($row, $expandableCondition))
                                                 <x-mary-icon
                                                     name="o-chevron-down"
-                                                    ::class="isExpanded({{ $getKeyValue($row, 'expandableKey') }}) || 'ltr:-rotate-90 rtl:rotate-90 !text-current'"
-                                                    class="cursor-pointer p-2 w-8 h-8 bg-base-300 rounded-lg"
+                                                    ::class="isExpanded({{ $getKeyValue($row, 'expandableKey') }}) || '{{ Mary::classes('ltr:-rotate-90 rtl:rotate-90 !text-current') }}'"
+                                                    class="{{ Mary::classes('cursor-pointer p-2 w-8 h-8 bg-base-300 rounded-lg') }}"
                                                     @click="toggleExpand({{ $getKeyValue($row, 'expandableKey') }});" />
                                             @endif
                                         </td>
@@ -378,9 +378,9 @@ class Table extends Component
 
                                         <!--  HAS CUSTOM SLOT ? -->
                                         @if(isset(${"cell_".$temp_key}))
-                                            <td @class([$cellClasses($row, $header), "p-0" => $hasLink($header)])>
+                                            <td class="{{ Mary::classes(['p-0' => $hasLink($header)])->addRaw($cellClasses($row, $header)) }}">
                                                 @if($hasLink($header))
-                                                    <a href="{{ $redirectLink($row) }}" wire:navigate class="block py-3 px-4">
+                                                    <a href="{{ $redirectLink($row) }}" wire:navigate class="{{ Mary::classes('block py-3 px-4') }}">
                                                 @endif
 
                                                 {{ ${"cell_".$temp_key}($fluent ? fluent($row) : $row) }}
@@ -390,9 +390,9 @@ class Table extends Component
                                                  @endif
                                             </td>
                                         @else
-                                            <td @class([$cellClasses($row, $header), "p-0" => $hasLink($header)])>
+                                            <td class="{{ Mary::classes(['p-0' => $hasLink($header)])->addRaw($cellClasses($row, $header)) }}">
                                                 @if($hasLink($header))
-                                                    <a href="{{ $redirectLink($row) }}" wire:navigate class="block py-3 px-4">
+                                                    <a href="{{ $redirectLink($row) }}" wire:navigate class="{{ Mary::classes('block py-3 px-4') }}">
                                                 @endif
 
                                                 {{ $format($row, data_get($row, $header['key']), $header) }}
@@ -406,13 +406,13 @@ class Table extends Component
 
                                     <!-- ACTIONS -->
                                     @if($actions)
-                                        <td class="text-right py-0">{{ $actions($row) }}</td>
+                                        <td class="{{ Mary::classes('text-right py-0') }}">{{ $actions($row) }}</td>
                                     @endif
                                 </tr>
 
                                 <!-- EXPANSION SLOT -->
                                 @if($expandable)
-                                    <tr wire:key="{{ $uuid }}-{{ $k }}--expand" class="!bg-inherit" :class="isExpanded({{ $getKeyValue($row, 'expandableKey') }}) || 'hidden'">
+                                    <tr wire:key="{{ $uuid }}-{{ $k }}--expand" class="{{ Mary::classes('!bg-inherit') }}" :class="isExpanded({{ $getKeyValue($row, 'expandableKey') }}) || '{{ Mary::classes('hidden') }}'">
                                         <td :colspan="colspanSize">
                                             {{ $expansion($fluent ? fluent($row) : $row) }}
                                         </td>
@@ -431,12 +431,12 @@ class Table extends Component
 
                     @if(count($rows) === 0)
                         @if($showEmptyText)
-                            <div class="text-center py-4 text-base-content/50">
+                            <div class="{{ Mary::classes('text-center py-4 text-base-content/50') }}">
                                 {{ $emptyText }}
                             </div>
                         @endif
                         @if($empty)
-                            <div class="text-center py-4 text-base-content/50">
+                            <div class="{{ Mary::classes('text-center py-4 text-base-content/50') }}">
                                 {{ $empty }}
                             </div>
                         @endif

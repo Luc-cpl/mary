@@ -14,22 +14,22 @@ class Textarea extends Component
         public ?string $id = null,
         public ?string $label = null,
         public ?string $hint = null,
-        public ?string $hintClass = 'fieldset-label',
+        public ?string $hintClass = null,
         public ?bool $inline = false,
 
-		// Popover
+        // Popover
         public ?string $popover = null,
-        public ?string $popoverIcon = "o-question-mark-circle",
+        public ?string $popoverIcon = 'o-question-mark-circle',
         public ?string $popoverTriggerClass = '',
         public ?string $popoverContentClass = '',
 
         // Validations
         public ?string $errorField = null,
-        public ?string $errorClass = 'text-error',
+        public ?string $errorClass = null,
         public ?bool $omitError = false,
         public ?bool $firstErrorOnly = false,
     ) {
-        $this->uuid = "mary" . md5(serialize($this)) . $id;
+        $this->uuid = 'mary' . md5(serialize($this)) . $id;
     }
 
     public function modelName(): ?string
@@ -51,21 +51,21 @@ class Textarea extends Component
                     $uuid = $uuid . $modelName()
                 @endphp
 
-                <fieldset class="fieldset py-0">
+                <fieldset class="{{ Mary::classes('fieldset py-0') }}">
                     {{-- STANDARD LABEL --}}
                     @if($label && !$inline)
-                        <legend class="fieldset-legend mb-0.5">
+                        <legend class="{{ Mary::classes('fieldset-legend mb-0.5') }}">
                             {{ $label }}
 
                             @if($attributes->get('required'))
-                                <span class="text-error">*</span>
+                                <span class="{{ Mary::classes('text-error') }}">*</span>
                             @endif
 
                             {{-- INPUT POPOVER --}}
                             @if($popover)
                                 <x-mary-popover offset="5" position="top-start">
                                     <x-slot:trigger class="{{ $popoverTriggerClass }}">
-                                        <x-mary-icon :name="$popoverIcon" class="w-4 h-4 opacity-40 mb-0.5" />
+                                        <x-mary-icon :name="$popoverIcon" class="{{ Mary::classes('w-4 h-4 opacity-40 mb-0.5') }}" />
                                     </x-slot:trigger>
                                     <x-slot:content class="{{ $popoverContentClass }}">
                                         {{ $popover }}
@@ -75,26 +75,26 @@ class Textarea extends Component
                         </legend>
                     @endif
 
-                    <label @class(["floating-label" => $label && $inline])>
+                    <label @maryClass(["floating-label" => $label && $inline])>
                         {{-- FLOATING LABEL--}}
                         @if ($label && $inline)
-                            <span class="font-semibold">
+                            <span class="{{ Mary::classes('font-semibold') }}">
                                 {{ $label }}
 
                                 @if($attributes->get('required'))
-                                    <span class="text-error">*</span>
+                                    <span class="{{ Mary::classes('text-error') }}">*</span>
                                 @endif
                             </span>
                         @endif
 
-                        <div class="w-full">
+                        <div class="{{ Mary::classes('w-full') }}">
                             {{-- TEXTAREA --}}
                             <textarea
                                 placeholder="{{ $attributes->get('placeholder') }} "
 
                                {{
                                     $attributes->merge(['id' => $uuid])
-                                    ->class([
+                                    ->maryClass([
                                         "textarea w-full",
                                         "border-dashed" => $attributes->has("readonly") && $attributes->get("readonly") == true,
                                         "!textarea-error" => $errorFieldName() && $errors->has($errorFieldName()) && !$omitError
@@ -108,7 +108,7 @@ class Textarea extends Component
                     @if(!$omitError && $errors->has($errorFieldName()))
                         @foreach($errors->get($errorFieldName()) as $message)
                             @foreach(Arr::wrap($message) as $line)
-                                <div class="{{ $errorClass }}" x-class="text-error">{{ $line }}</div>
+                                <div class="{{ is_null($errorClass) ? Mary::classes('text-error') : Mary::classes()->addRaw($errorClass) }}" x-class="{{ Mary::classes('text-error') }}">{{ $line }}</div>
                                 @break($firstErrorOnly)
                             @endforeach
                             @break($firstErrorOnly)
@@ -117,7 +117,7 @@ class Textarea extends Component
 
                     {{-- HINT --}}
                     @if($hint)
-                        <div class="{{ $hintClass }}" x-classes="fieldset-label">{{ $hint }}</div>
+                        <div class="{{ is_null($hintClass) ? Mary::classes('fieldset-label') : Mary::classes()->addRaw($hintClass) }}" x-classes="{{ Mary::classes('fieldset-label') }}">{{ $hint }}</div>
                     @endif
                 </fieldset>
             </div>

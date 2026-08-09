@@ -17,13 +17,13 @@ class Code extends Component
         public string $language = 'javascript',
         public ?string $lightTheme = 'github_light_default',
         public ?string $darkTheme = 'github_dark',
-        public ?string $lightClass = "light",
-        public ?string $darkClass = "dark",
+        public ?string $lightClass = 'light',
+        public ?string $darkClass = 'dark',
         public string $height = '200px',
         public string $lineHeight = '2',
         public bool $printMargin = false,
     ) {
-        $this->uuid = "mary" . md5(serialize($this)) . $id;
+        $this->uuid = 'mary' . md5(serialize($this)) . $id;
     }
 
     public function modelName(): ?string
@@ -36,10 +36,10 @@ class Code extends Component
         return <<<'BLADE'
             <div>
                 @if($label)
-                    <div class="text-xs font-semibold mt-5 mb-3">{{ $label }}</div>
+                    <div class="{{ Mary::classes('text-xs font-semibold mt-5 mb-3') }}">{{ $label }}</div>
                 @endif
 
-                <div {{ $attributes->whereStartsWith('class')->class(["textarea w-full p-0", "textarea-error" => $errors->has($modelName())]) }} >
+                <div {{ $attributes->whereStartsWith('class')->maryClass(["textarea w-full p-0", "textarea-error" => $errors->has($modelName())]) }} >
                     <div
                         wire:ignore
                         x-data="{
@@ -98,11 +98,11 @@ class Code extends Component
                 </div>
 
                 @error($modelName())
-                    <div class="text-error text-xs mt-3">{{ $message }}</div>
+                    <div class="{{ Mary::classes('text-error text-xs mt-3') }}">{{ $message }}</div>
                 @enderror
 
                 @if($hint)
-                    <div class="text-xs text-base-content/50 mt-2">{{ $hint }}</div>
+                    <div class="{{ Mary::classes('text-xs text-base-content/50 mt-2') }}">{{ $hint }}</div>
                 @endif
             </div>
         BLADE;

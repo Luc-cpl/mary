@@ -17,7 +17,7 @@ class Icon extends Component
         public ?string $id = null,
         public ?string $label = null
     ) {
-        $this->uuid = "mary" . md5(serialize($this)) . $id;
+        $this->uuid = 'mary' . md5(serialize($this)) . $id;
     }
 
     public function icon(): string|Stringable
@@ -37,11 +37,11 @@ class Icon extends Component
     {
         return <<<'BLADE'
                 @if(strlen($label ?? '') > 0)
-                    <div class="inline-flex items-center gap-1">
+                    <div class="{{ Mary::classes('inline-flex items-center gap-1') }}">
                 @endif
                     <x-svg
                         :name="$icon()"
-                        {{ $attributes->class(['inline flex-shrink-0', 'w-5 h-5' => !Str::contains($attributes->get('class') ?? '', ['w-', 'h-']) ]) }}
+                        {{ $attributes->maryClass(['inline flex-shrink-0', 'w-5 h-5' => !Str::contains($attributes->get('class') ?? '', ['w-', 'h-']) ]) }}
                     />
 
                 @if(strlen($label ?? '') > 0)

@@ -30,7 +30,7 @@ class MenuItem extends Component
         public ?bool $disabled = false,
         public ?bool $exact = false
     ) {
-        $this->uuid = "mary" . md5(serialize($this)) . $id;
+        $this->uuid = 'mary' . md5(serialize($this)) . $id;
     }
 
     public function spinnerTarget(): ?string
@@ -80,15 +80,21 @@ class MenuItem extends Component
         }
 
         return <<<'BLADE'
-                @aware(['horizontal' => false, 'activateByRoute' => false, 'activeBgColor' => 'bg-base-300'])
+                @aware(['horizontal' => false, 'activateByRoute' => false, 'activeBgColor' => null])
 
-                <li @class(['menu-disabled' => $disabled])>
+                @php
+                    $isActive = $active || ($activateByRoute && $routeMatches());
+                @endphp
+
+                <li @maryClass(['menu-disabled' => $disabled])>
                     <a
                         {{
-                            $attributes->class([
-                                "my-0.5 py-1.5 px-4 hover:text-inherit whitespace-nowrap",
-                                "mary-active-menu $activeBgColor" => ($active || ($activateByRoute && $routeMatches()))
-                            ])
+                            $attributes->class(
+                                Mary::classes('my-0.5 py-1.5 px-4 hover:text-inherit whitespace-nowrap')
+                                    ->add($isActive && is_null($activeBgColor) ? 'bg-base-300' : null)
+                                    ->addRaw(['mary-active-menu' => $isActive])
+                                    ->addRaw($isActive ? $activeBgColor : null)
+                            )
                         }}
 
                         @if($getHref())
@@ -110,22 +116,22 @@ class MenuItem extends Component
                     >
                         {{-- SPINNER --}}
                         @if($spinner)
-                            <span wire:loading wire:target="{{ $spinnerTarget() }}" class="loading loading-spinner loading-xs w-5 h-5 @if($icon) my-1 @endif"></span>
+                            <span wire:loading wire:target="{{ $spinnerTarget() }}" class="{{ Mary::classes(['loading loading-spinner loading-xs w-5 h-5', 'my-1' => $icon]) }}"></span>
                         @endif
 
                         @if($icon)
-                            <span class="block py-0.5" @if($spinner) wire:loading.class="hidden" wire:target="{{ $spinnerTarget() }}" @endif>
-                                <x-mary-icon :name="$icon" @class(['mb-0.5', $iconClasses]) />
+                            <span class="{{ Mary::classes('block py-0.5') }}" @if($spinner) wire:loading.class="{{ Mary::classes('hidden') }}" wire:target="{{ $spinnerTarget() }}" @endif>
+                                <x-mary-icon :name="$icon" class="{{ Mary::classes('mb-0.5')->addRaw($iconClasses) }}" />
                             </span>
                         @endif
 
                         @if($title || $slot->isNotEmpty())
-                        <span @class(["mary-hideable whitespace-nowrap", "truncate" => !$horizontal])>
+                        <span class="{{ Mary::classes(['whitespace-nowrap', 'truncate' => ! $horizontal])->addRaw('mary-hideable') }}">
                             @if($title)
                                 {{ $title }}
 
                                 @if($badge)
-                                    <span class="badge badge-sm {{ $badgeClasses }}">{{ $badge }}</span>
+                                    <span class="{{ Mary::classes('badge badge-sm')->addRaw($badgeClasses) }}">{{ $badge }}</span>
                                 @endif
                             @else
                                 {{ $slot }}

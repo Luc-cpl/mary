@@ -16,7 +16,7 @@ class Input extends Component
         public ?string $icon = null,
         public ?string $iconRight = null,
         public ?string $hint = null,
-        public ?string $hintClass = 'fieldset-label',
+        public ?string $hintClass = null,
         public ?string $prefix = null,
         public ?string $suffix = null,
         public ?bool $inline = false,
@@ -24,9 +24,9 @@ class Input extends Component
         public ?bool $money = false,
         public ?string $locale = 'en-US',
 
-	    // Popover
+        // Popover
         public ?string $popover = null,
-        public ?string $popoverIcon = "o-question-mark-circle",
+        public ?string $popoverIcon = 'o-question-mark-circle',
         public ?string $popoverTriggerClass = '',
         public ?string $popoverContentClass = '',
 
@@ -36,11 +36,11 @@ class Input extends Component
 
         // Validations
         public ?string $errorField = null,
-        public ?string $errorClass = 'text-error',
+        public ?string $errorClass = null,
         public ?bool $omitError = false,
         public ?bool $firstErrorOnly = false,
     ) {
-        $this->uuid = "mary" . md5(serialize($this)) . $id;
+        $this->uuid = 'mary' . md5(serialize($this)) . $id;
     }
 
     public function modelName(): ?string
@@ -68,8 +68,8 @@ class Input extends Component
         return json_encode([
             'init' => true,
             'maskOpts' => [
-                'locales' => $this->locale
-            ]
+                'locales' => $this->locale,
+            ],
         ]);
     }
 
@@ -82,21 +82,21 @@ class Input extends Component
                     $uuid = $uuid . $modelName()
                 @endphp
 
-                <fieldset class="fieldset py-0">
+                <fieldset class="{{ Mary::classes('fieldset py-0') }}">
                     {{-- STANDARD LABEL --}}
                     @if($label && !$inline)
-                        <legend class="fieldset-legend mb-0.5">
+                        <legend class="{{ Mary::classes('fieldset-legend mb-0.5') }}">
                             {{ $label }}
 
                             @if($attributes->get('required'))
-                                <span class="text-error">*</span>
+                                <span class="{{ Mary::classes('text-error') }}">*</span>
                             @endif
 
                             {{-- INPUT POPOVER --}}
                             @if($popover)
                                 <x-mary-popover offset="5" position="top-start">
                                     <x-slot:trigger class="{{ $popoverTriggerClass }}">
-                                        <x-mary-icon :name="$popoverIcon" class="w-4 h-4 opacity-40 mb-0.5" />
+                                        <x-mary-icon :name="$popoverIcon" class="{{ Mary::classes('w-4 h-4 opacity-40 mb-0.5') }}" />
                                     </x-slot:trigger>
                                     <x-slot:content class="{{ $popoverContentClass }}">
                                         {{ $popover }}
@@ -106,19 +106,19 @@ class Input extends Component
                         </legend>
                     @endif
 
-                    <label @class(["floating-label" => $label && $inline])>
+                    <label @maryClass(["floating-label" => $label && $inline])>
                         {{-- FLOATING LABEL--}}
                         @if ($label && $inline)
-                            <span class="font-semibold">
+                            <span class="{{ Mary::classes('font-semibold') }}">
                                 {{ $label }}
 
                                 @if($attributes->get('required'))
-                                    <span class="text-error">*</span>
+                                    <span class="{{ Mary::classes('text-error') }}">*</span>
                                 @endif
                             </span>
                         @endif
 
-                        <div @class(["w-full", "join" => $prepend || $append])>
+                        <div @maryClass(["w-full", "join" => $prepend || $append])>
                             {{-- PREPEND --}}
                             @if($prepend)
                                 {{ $prepend }}
@@ -131,7 +131,7 @@ class Input extends Component
                                 @endif
 
                                 {{
-                                    $attributes->whereStartsWith('class')->class([
+                                    $attributes->whereStartsWith('class')->maryClass([
                                         "input w-full",
                                         "join-item" => $prepend || $append,
                                         "border-dashed" => $isReadonly(),
@@ -141,18 +141,18 @@ class Input extends Component
                              >
                                 {{-- PREFIX --}}
                                 @if($prefix)
-                                    <span class="label">{{ $prefix }}</span>
+                                    <span class="{{ Mary::classes('label') }}">{{ $prefix }}</span>
                                 @endif
 
                                 {{-- ICON LEFT --}}
                                 @if($icon)
-                                    <x-mary-icon :name="$icon" class="pointer-events-none w-4 h-4 opacity-40" />
+                                    <x-mary-icon :name="$icon" class="{{ Mary::classes('pointer-events-none w-4 h-4 opacity-40') }}" />
                                 @endif
 
                                 {{-- MONEY SETUP --}}
                                 @if($money)
                                     <div
-                                        class="w-full"
+                                        class="{{ Mary::classes('w-full') }}"
                                         x-data="{
                                             amount: $wire.get('{{ $modelName() }}'),
                                             currency: null,
@@ -202,17 +202,17 @@ class Input extends Component
 
                                 {{-- CLEAR ICON  --}}
                                 @if($clearable)
-                                    <x-mary-icon x-on:click="$wire.set('{{ $modelName() }}', '', {{ json_encode($attributes->wire('model')->hasModifier('live')) }})"  name="o-x-mark" class="cursor-pointer w-4 h-4 opacity-40"/>
+                                    <x-mary-icon x-on:click="$wire.set('{{ $modelName() }}', '', {{ json_encode($attributes->wire('model')->hasModifier('live')) }})"  name="o-x-mark" class="{{ Mary::classes('cursor-pointer w-4 h-4 opacity-40') }}"/>
                                 @endif
 
                                 {{-- ICON RIGHT --}}
                                 @if($iconRight)
-                                    <x-mary-icon :name="$iconRight" class="pointer-events-none w-4 h-4 opacity-40" />
+                                    <x-mary-icon :name="$iconRight" class="{{ Mary::classes('pointer-events-none w-4 h-4 opacity-40') }}" />
                                 @endif
 
                                 {{-- SUFFIX --}}
                                 @if($suffix)
-                                    <span class="label">{{ $suffix }}</span>
+                                    <span class="{{ Mary::classes('label') }}">{{ $suffix }}</span>
                                 @endif
                             </label>
 
@@ -227,7 +227,7 @@ class Input extends Component
                     @if(!$omitError && $errors->has($errorFieldName()))
                         @foreach($errors->get($errorFieldName()) as $message)
                             @foreach(Arr::wrap($message) as $line)
-                                <div class="{{ $errorClass }}" x-class="text-error">{{ $line }}</div>
+                                <div class="{{ is_null($errorClass) ? Mary::classes('text-error') : Mary::classes()->addRaw($errorClass) }}" x-class="{{ Mary::classes('text-error') }}">{{ $line }}</div>
                                 @break($firstErrorOnly)
                             @endforeach
                             @break($firstErrorOnly)
@@ -236,7 +236,7 @@ class Input extends Component
 
                     {{-- HINT --}}
                     @if($hint)
-                        <div class="{{ $hintClass }}" x-classes="fieldset-label">{{ $hint }}</div>
+                        <div class="{{ is_null($hintClass) ? Mary::classes('fieldset-label') : Mary::classes()->addRaw($hintClass) }}" x-classes="{{ Mary::classes('fieldset-label') }}">{{ $hint }}</div>
                     @endif
                 </fieldset>
             </div>

@@ -14,7 +14,7 @@ class Accordion extends Component
         public ?string $id = null,
         public ?bool $noJoin = false,
     ) {
-        $this->uuid = "mary" . md5(serialize($this)) . $id;
+        $this->uuid = 'mary' . md5(serialize($this)) . $id;
     }
 
     public function render(): View|Closure|string
@@ -22,7 +22,7 @@ class Accordion extends Component
         return <<<'BLADE'
                 <div
                     x-data="{ model: @entangle($attributes->wire('model')) }"
-                    {{ $attributes->whereDoesntStartWith('wire:model')->merge(['class' => ($noJoin ? '' : 'join join-vertical w-full')]) }}
+                    {{ $attributes->whereDoesntStartWith('wire:model')->class(Mary::classes(['join join-vertical w-full' => ! $noJoin])) }}
                     wire:key="accordion-{{ $uuid }}"
                 >
                         {{ $slot }}

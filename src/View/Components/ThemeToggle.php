@@ -13,16 +13,16 @@ class ThemeToggle extends Component
     public function __construct(
         public ?string $id = null,
         public ?string $value = null,
-        public ?string $light = "Light",
-        public ?string $dark = "Dark",
-        public ?string $lightTheme = "light",
-        public ?string $darkTheme = "dark",
-        public ?string $lightClass = "light",
-        public ?string $darkClass = "dark",
+        public ?string $light = 'Light',
+        public ?string $dark = 'Dark',
+        public ?string $lightTheme = 'light',
+        public ?string $darkTheme = 'dark',
+        public ?string $lightClass = 'light',
+        public ?string $darkClass = 'dark',
         public ?bool $withLabel = false,
 
     ) {
-        $this->uuid = "mary" . md5(serialize($this)) . $id;
+        $this->uuid = 'mary' . md5(serialize($this)) . $id;
     }
 
     public function render(): View|Closure|string
@@ -36,10 +36,10 @@ class ThemeToggle extends Component
                             class: $persist(window.matchMedia('(prefers-color-scheme: dark)').matches ? '{{ $darkClass }}' : '{{ $lightClass }}').as('mary-class'),
                             init() {
                                 if (this.theme == '{{ $darkTheme }}') {
-                                    this.$refs.sun.classList.add('swap-off');
-                                    this.$refs.sun.classList.remove('swap-on');
-                                    this.$refs.moon.classList.add('swap-on');
-                                    this.$refs.moon.classList.remove('swap-off');
+                                    this.$refs.sun.classList.add('{{ Mary::classes('swap-off') }}');
+                                    this.$refs.sun.classList.remove('{{ Mary::classes('swap-on') }}');
+                                    this.$refs.moon.classList.add('{{ Mary::classes('swap-on') }}');
+                                    this.$refs.moon.classList.remove('{{ Mary::classes('swap-off') }}');
                                 }
                                 this.setToggle()
                             },
@@ -56,11 +56,11 @@ class ThemeToggle extends Component
                             }
                         }"
                         @mary-toggle-theme.window="toggle()"
-                        {{ $attributes->class("swap swap-rotate") }}
+                        {{ $attributes->class(Mary::classes("swap swap-rotate")) }}
                     >
-                        <input id="{{ $uuid }}" type="checkbox" class="theme-controller opacity-0" @click="toggle()" :value="theme" />
-                        <x-mary-icon x-ref="sun" name="o-sun" class="swap-on" />
-                        <x-mary-icon x-ref="moon" name="o-moon" class="swap-off"  />
+                        <input id="{{ $uuid }}" type="checkbox" class="{{ Mary::classes('opacity-0') }}" @click="toggle()" :value="theme" />
+                        <x-mary-icon x-ref="sun" name="o-sun" class="{{ Mary::classes('swap-on') }}" />
+                        <x-mary-icon x-ref="moon" name="o-moon" class="{{ Mary::classes('swap-off') }}"  />
                     </label>
                 </div>
                 <script>

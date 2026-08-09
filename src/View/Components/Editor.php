@@ -16,25 +16,25 @@ class Editor extends Component
         public ?string $id = null,
         public ?string $label = null,
         public ?string $hint = null,
-        public ?string $hintClass = 'fieldset-label',
+        public ?string $hintClass = null,
         public ?string $disk = 'public',
         public ?string $folder = 'editor',
         public ?bool $gplLicense = false,
         public ?array $config = [],
 
-	    // Popover
+        // Popover
         public ?string $popover = null,
-        public ?string $popoverIcon = "o-question-mark-circle",
+        public ?string $popoverIcon = 'o-question-mark-circle',
         public ?string $popoverTriggerClass = '',
         public ?string $popoverContentClass = '',
 
         // Validations
         public ?string $errorField = null,
-        public ?string $errorClass = 'text-error',
+        public ?string $errorClass = null,
         public ?bool $omitError = false,
         public ?bool $firstErrorOnly = false,
     ) {
-        $this->uuid = "mary" . md5(serialize($this)) . $id;
+        $this->uuid = 'mary' . md5(serialize($this)) . $id;
         $this->uploadUrl = route('mary.upload', absolute: false);
     }
 
@@ -64,7 +64,7 @@ class Editor extends Component
 
         $setup['plugins'] = str('advlist autolink lists link image table quickbars ')->append($this->config['plugins'] ?? '');
 
-        return str(json_encode($setup))->trim('{}')->replace("\"", "'")->toString();
+        return str(json_encode($setup))->trim('{}')->replace('"', "'")->toString();
     }
 
     public function render(): View|Closure|string
@@ -76,21 +76,21 @@ class Editor extends Component
                 @endphp
 
                 <div>
-                    <fieldset class="fieldset py-0">
+                    <fieldset class="{{ Mary::classes('fieldset py-0') }}">
                     {{-- STANDARD LABEL --}}
                     @if($label)
-                        <legend class="fieldset-legend mb-0.5">
+                        <legend class="{{ Mary::classes('fieldset-legend mb-0.5') }}">
                             {{ $label }}
 
                             @if($attributes->get('required'))
-                                <span class="text-error">*</span>
+                                <span class="{{ Mary::classes('text-error') }}">*</span>
                             @endif
                             
                             {{-- INPUT POPOVER --}}
                             @if($popover)
                                 <x-mary-popover offset="5" position="top-start">
                                     <x-slot:trigger class="{{ $popoverTriggerClass }}">
-                                        <x-mary-icon :name="$popoverIcon" class="w-4 h-4 opacity-40 mb-0.5" />
+                                        <x-mary-icon :name="$popoverIcon" class="{{ Mary::classes('w-4 h-4 opacity-40 mb-0.5') }}" />
                                     </x-slot:trigger>
                                     <x-slot:content class="{{ $popoverContentClass }}">
                                         {{ $popover }}
@@ -176,7 +176,7 @@ class Editor extends Component
                         @if(!$omitError && $errors->has($errorFieldName()))
                             @foreach($errors->get($errorFieldName()) as $message)
                                 @foreach(Arr::wrap($message) as $line)
-                                    <div class="{{ $errorClass }}" x-class="text-error">{{ $line }}</div>
+                                    <div class="{{ is_null($errorClass) ? Mary::classes('text-error') : Mary::classes()->addRaw($errorClass) }}" x-class="{{ Mary::classes('text-error') }}">{{ $line }}</div>
                                     @break($firstErrorOnly)
                                 @endforeach
                                 @break($firstErrorOnly)
@@ -185,7 +185,7 @@ class Editor extends Component
 
                         {{-- HINT --}}
                         @if($hint)
-                            <div class="{{ $hintClass }}" x-classes="fieldset-label">{{ $hint }}</div>
+                            <div class="{{ is_null($hintClass) ? Mary::classes('fieldset-label') : Mary::classes()->addRaw($hintClass) }}" x-classes="{{ Mary::classes('fieldset-label') }}">{{ $hint }}</div>
                         @endif
                     </fieldset>
                 </div>

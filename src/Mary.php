@@ -4,8 +4,10 @@ namespace Mary;
 
 class Mary
 {
-    public static function hello(): string
+    public function classes(string|array|null $classes = null): ClassBuilder
     {
-        return 'Hello!';
+        $builder = new ClassBuilder(config('mary.tailwind_prefix'));
+
+        return $classes === null ? $builder : $builder->add($classes);
     }
 }

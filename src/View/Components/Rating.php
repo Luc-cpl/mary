@@ -14,7 +14,7 @@ class Rating extends Component
         public ?string $id = null,
         public int $total = 5
     ) {
-        $this->uuid = "mary" . md5(serialize($this)) . $id;
+        $this->uuid = 'mary' . md5(serialize($this)) . $id;
     }
 
     public function modelName(): ?string
@@ -30,13 +30,13 @@ class Rating extends Component
     public function render(): View|Closure|string
     {
         return <<<'HTML'
-                <div class="rating gap-1 {{ $size }}" x-cloak>
+                <div class="{{ Mary::classes('rating gap-1')->addRaw($size) }}" x-cloak>
                     <!-- NO RATING-->
                     <input
                         type="radio"
                         name="{{ $modelName() }}"
                         value="0"
-                        class="rating-hidden hidden"
+                        class="{{ Mary::classes('rating-hidden hidden') }}"
                         {{ $attributes->whereStartsWith('wire:model') }}
                     />
 
@@ -46,7 +46,7 @@ class Rating extends Component
                             name="{{ $modelName() }}"
                             value="{{ $i }}"
                             {{ $attributes->whereStartsWith('wire:model') }}
-                            {{ $attributes->class(["mask mask-star-2"]) }}
+                            {{ $attributes->maryClass(["mask mask-star-2"]) }}
                         />
                     @endfor
                 </div>

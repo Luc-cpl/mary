@@ -14,30 +14,30 @@ class File extends Component
         public ?string $id = null,
         public ?string $label = null,
         public ?string $hint = null,
-        public ?string $hintClass = 'fieldset-label',
+        public ?string $hintClass = null,
         public ?bool $hideProgress = false,
         public ?bool $cropAfterChange = false,
-        public ?string $changeText = "Change",
-        public ?string $cropTitleText = "Crop image",
-        public ?string $cropCancelText = "Cancel",
-        public ?string $cropSaveText = "Crop",
+        public ?string $changeText = 'Change',
+        public ?string $cropTitleText = 'Crop image',
+        public ?string $cropCancelText = 'Cancel',
+        public ?string $cropSaveText = 'Crop',
         public ?array $cropConfig = [],
-        public ?string $cropMimeType = "image/png",
+        public ?string $cropMimeType = 'image/png',
 
-	    // Popover
+        // Popover
         public ?string $popover = null,
-        public ?string $popoverIcon = "o-question-mark-circle",
+        public ?string $popoverIcon = 'o-question-mark-circle',
         public ?string $popoverTriggerClass = '',
         public ?string $popoverContentClass = '',
 
         // Validations
         public ?string $errorField = null,
-        public ?string $errorClass = 'text-error',
+        public ?string $errorClass = null,
         public ?bool $omitError = false,
         public ?bool $firstErrorOnly = false,
 
     ) {
-        $this->uuid = "mary" . md5(serialize($this)) . $id;
+        $this->uuid = 'mary' . md5(serialize($this)) . $id;
     }
 
     public function modelName(): ?string
@@ -55,7 +55,7 @@ class File extends Component
         return json_encode(array_merge([
             'autoCropArea' => 1,
             'viewMode' => 1,
-            'dragMode' => 'move'
+            'dragMode' => 'move',
         ], $this->cropConfig));
     }
 
@@ -142,21 +142,21 @@ class File extends Component
 
                     {{ $attributes->whereStartsWith('class') }}
                 >
-                    <fieldset class="fieldset py-0">
+                    <fieldset class="{{ Mary::classes('fieldset py-0') }}">
                         {{-- STANDARD LABEL --}}
                         @if($label)
-                            <legend class="fieldset-legend mb-0.5">
+                            <legend class="{{ Mary::classes('fieldset-legend mb-0.5') }}">
                                 {{ $label }}
 
                                 @if($attributes->get('required'))
-                                    <span class="text-error">*</span>
+                                    <span class="{{ Mary::classes('text-error') }}">*</span>
                                 @endif
                                 
                                 {{-- INPUT POPOVER --}}
                                 @if($popover)
                                     <x-mary-popover offset="5" position="top-start">
                                         <x-slot:trigger class="{{ $popoverTriggerClass }}">
-                                            <x-mary-icon :name="$popoverIcon" class="w-4 h-4 opacity-40 mb-0.5" />
+                                            <x-mary-icon :name="$popoverIcon" class="{{ Mary::classes('w-4 h-4 opacity-40 mb-0.5') }}" />
                                         </x-slot:trigger>
                                         <x-slot:content class="{{ $popoverContentClass }}">
                                             {{ $popover }}
@@ -172,8 +172,8 @@ class File extends Component
                                 x-cloak
                                 max="100"
                                 :value="progress"
-                                :class="!processing && 'hidden'"
-                                class="progress h-1 absolute -mt-2 w-56"></progress>
+                                :class="!processing && '{{ Mary::classes('hidden') }}'"
+                                class="{{ Mary::classes('progress h-1 absolute -mt-2 w-56') }}"></progress>
                         @endif
 
                         {{-- INPUT --}}
@@ -184,7 +184,7 @@ class File extends Component
                             @change="refreshImage()"
 
                             {{
-                                $attributes->whereDoesntStartWith('class')->class([
+                                $attributes->whereDoesntStartWith('class')->maryClass([
                                     "file-input w-full",
                                     "!file-input-error" => $errorFieldName() && $errors->has($errorFieldName()) && !$omitError,
                                     "hidden" => $slot->isNotEmpty()
@@ -194,12 +194,12 @@ class File extends Component
 
                         @if ($slot->isNotEmpty())
                             <!-- PREVIEW AREA -->
-                            <div x-ref="preview" class="relative flex">
+                            <div x-ref="preview" class="{{ Mary::classes('relative flex') }}">
                                 <div
                                     wire:ignore
                                     @click="change()"
-                                    :class="processing && 'opacity-50 pointer-events-none'"
-                                    class="cursor-pointer hover:scale-105 transition-all tooltip"
+                                    :class="processing && '{{ Mary::classes('opacity-50 pointer-events-none') }}'"
+                                    class="{{ Mary::classes('cursor-pointer hover:scale-105 transition-all tooltip') }}"
                                     data-tip="{{ $changeText }}"
                                 >
                                     {{ $slot }}
@@ -208,19 +208,19 @@ class File extends Component
                                 <div
                                     x-cloak
                                     :style="`--value:${progress}; --size:1.5rem; --thickness: 4px;`"
-                                    :class="!processing && 'hidden'"
-                                    class="radial-progress text-success absolute top-5 start-5 bg-neutral"
+                                    :class="!processing && '{{ Mary::classes('hidden') }}'"
+                                    class="{{ Mary::classes('radial-progress text-success absolute top-5 start-5 bg-neutral') }}"
                                     role="progressbar"
                                 ></div>
                             </div>
 
                             <!-- CROP MODAL -->
                             <div @click.prevent="" x-ref="crop" wire:ignore>
-                                <x-mary-modal id="maryCrop{{ $uuid }}" x-ref="maryCrop" :title="$cropTitleText" separator class="backdrop-blur-sm" persistent @keydown.window.esc.prevent="" without-trap-focus>
+                                <x-mary-modal id="maryCrop{{ $uuid }}" x-ref="maryCrop" :title="$cropTitleText" separator class="{{ Mary::classes('backdrop-blur-sm') }}" persistent @keydown.window.esc.prevent="" without-trap-focus>
                                     <img src="" />
                                     <x-slot:actions>
                                         <x-mary-button :label="$cropCancelText" @click="close()" />
-                                        <x-mary-button :label="$cropSaveText" class="btn-primary" @click="save()" ::disabled="processing" />
+                                        <x-mary-button :label="$cropSaveText" class="{{ Mary::classes('btn-primary') }}" @click="save()" ::disabled="processing" />
                                     </x-slot:actions>
                                 </x-mary-modal>
                             </div>
@@ -230,7 +230,7 @@ class File extends Component
                         @if(!$omitError && $errors->has($errorFieldName()))
                             @foreach($errors->get($errorFieldName()) as $message)
                                 @foreach(Arr::wrap($message) as $line)
-                                    <div class="{{ $errorClass }}" x-classes="text-error">{{ $line }}</div>
+                                    <div class="{{ is_null($errorClass) ? Mary::classes('text-error') : Mary::classes()->addRaw($errorClass) }}" x-classes="{{ Mary::classes('text-error') }}">{{ $line }}</div>
                                     @break($firstErrorOnly)
                                 @endforeach
                                 @break($firstErrorOnly)
@@ -239,12 +239,12 @@ class File extends Component
 
                         {{-- MULTIPLE --}}
                         @error($modelName().'.*')
-                            <div class="text-error" x-classes="text-error">{{ $message }}</div>
+                            <div class="{{ Mary::classes('text-error') }}" x-classes="{{ Mary::classes('text-error') }}">{{ $message }}</div>
                         @enderror
 
                         {{-- HINT --}}
                         @if($hint)
-                            <div class="{{ $hintClass }}" x-classes="fieldset-label">{{ $hint }}</div>
+                            <div class="{{ is_null($hintClass) ? Mary::classes('fieldset-label') : Mary::classes()->addRaw($hintClass) }}" x-classes="{{ Mary::classes('fieldset-label') }}">{{ $hint }}</div>
                         @endif
                     </fieldset>
                 </div>

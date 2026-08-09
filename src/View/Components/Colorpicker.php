@@ -16,26 +16,26 @@ class Colorpicker extends Component
         public ?string $icon = '',
         public ?string $iconRight = null,
         public ?string $hint = null,
-        public ?string $hintClass = 'fieldset-label',
+        public ?string $hintClass = null,
         public ?string $prefix = null,
         public ?string $suffix = null,
         public ?bool $inline = false,
         public ?bool $clearable = false,
 
-	    // Popover
+        // Popover
         public ?string $popover = null,
-        public ?string $popoverIcon = "o-question-mark-circle",
+        public ?string $popoverIcon = 'o-question-mark-circle',
         public ?string $popoverTriggerClass = '',
         public ?string $popoverContentClass = '',
 
         // Validations
         public ?string $errorField = null,
-        public ?string $errorClass = 'text-error',
+        public ?string $errorClass = null,
         public ?bool $omitError = false,
         public ?bool $firstErrorOnly = false,
 
     ) {
-        $this->uuid = "mary" . md5(serialize($this)) . $id;
+        $this->uuid = 'mary' . md5(serialize($this)) . $id;
     }
 
     public function modelName(): ?string
@@ -67,21 +67,21 @@ class Colorpicker extends Component
                     $uuid = $uuid . $modelName()
                 @endphp
 
-                <fieldset class="fieldset py-0">
+                <fieldset class="{{ Mary::classes('fieldset py-0') }}">
                     {{-- STANDARD LABEL --}}
                     @if($label && !$inline)
-                        <legend class="fieldset-legend mb-0.5">
+                        <legend class="{{ Mary::classes('fieldset-legend mb-0.5') }}">
                             {{ $label }}
 
                             @if($attributes->get('required'))
-                                <span class="text-error">*</span>
+                                <span class="{{ Mary::classes('text-error') }}">*</span>
                             @endif
 
                             {{-- INPUT POPOVER --}}
                             @if($popover)
                                 <x-mary-popover offset="5" position="top-start">
                                     <x-slot:trigger class="{{ $popoverTriggerClass }}">
-                                        <x-mary-icon :name="$popoverIcon" class="w-4 h-4 opacity-40 mb-0.5" />
+                                        <x-mary-icon :name="$popoverIcon" class="{{ Mary::classes('w-4 h-4 opacity-40 mb-0.5') }}" />
                                     </x-slot:trigger>
                                     <x-slot:content class="{{ $popoverContentClass }}">
                                         {{ $popover }}
@@ -91,33 +91,33 @@ class Colorpicker extends Component
                         </legend>
                     @endif
 
-                    <label @class(["floating-label" => $label && $inline])>
+                    <label @maryClass(["floating-label" => $label && $inline])>
                         {{-- FLOATING LABEL--}}
                         @if ($label && $inline)
-                            <span class="font-semibold">
+                            <span class="{{ Mary::classes('font-semibold') }}">
                                 {{ $label }}
 
                                 @if($attributes->get('required'))
-                                    <span class="text-error">*</span>
+                                    <span class="{{ Mary::classes('text-error') }}">*</span>
                                 @endif
                             </span>
                         @endif
 
-                        <div class="w-full join">
+                        <div class="{{ Mary::classes('w-full join') }}">
                              {{-- COLOR PICKER --}}
                              <label
                                 x-on:click="$refs.colorpicker.click()"
-                                :class="!$wire.{{ $modelName() }} && 'bg-[repeating-linear-gradient(45deg,_#ddd_0px,_#ddd_1px,_transparent_1px,_transparent_5px)]'"
+                                :class="!$wire.{{ $modelName() }} && '{{ Mary::classes('bg-[repeating-linear-gradient(45deg,_#ddd_0px,_#ddd_1px,_transparent_1px,_transparent_5px)]') }}'"
                                 :style="{ backgroundColor: $wire.{{ $modelName() }} }"
-                                @class(["input join-item w-12 p-0", "border border-dashed" => $isReadonly()])
+                                @maryClass(["input join-item w-12 p-0", "border border-dashed" => $isReadonly()])
                              >
                                 <input
                                     type="color"
-                                    class="cursor-pointer opacity-0 join-item"
+                                    class="{{ Mary::classes('cursor-pointer opacity-0 join-item') }}"
                                     x-ref="colorpicker"
                                     x-on:click.stop=""
                                     :style="{ backgroundColor: $wire.{{ $modelName() }} }"
-                                    @class(["border-dashed" => $isReadonly()])
+                                    @maryClass(["border-dashed" => $isReadonly()])
                                     {{ $attributes->wire('model') }}
 
                                     @if($isDisabled() || $isReadonly())
@@ -129,7 +129,7 @@ class Colorpicker extends Component
                             {{-- THE LABEL THAT HOLDS THE INPUT --}}
                             <label
                                 {{
-                                    $attributes->whereStartsWith('class')->class([
+                                    $attributes->whereStartsWith('class')->maryClass([
                                         "input join-item w-full",
                                         "border-dashed" => $isReadonly(),
                                         "!input-error" => $errorFieldName() && $errors->has($errorFieldName()) && !$omitError
@@ -138,12 +138,12 @@ class Colorpicker extends Component
                              >
                                 {{-- PREFIX --}}
                                 @if($prefix)
-                                    <span class="label">{{ $prefix }}</span>
+                                    <span class="{{ Mary::classes('label') }}">{{ $prefix }}</span>
                                 @endif
 
                                 {{-- ICON LEFT --}}
                                 @if($icon)
-                                    <x-mary-icon :name="$icon" class="pointer-events-none w-4 h-4 -ms-1 opacity-40" />
+                                    <x-mary-icon :name="$icon" class="{{ Mary::classes('pointer-events-none w-4 h-4 -ms-1 opacity-40') }}" />
                                 @endif
 
                                 {{-- INPUT --}}
@@ -155,12 +155,12 @@ class Colorpicker extends Component
 
                                 {{-- ICON RIGHT --}}
                                 @if($iconRight)
-                                    <x-mary-icon :name="$iconRight" class="pointer-events-none w-4 h-4 opacity-40" />
+                                    <x-mary-icon :name="$iconRight" class="{{ Mary::classes('pointer-events-none w-4 h-4 opacity-40') }}" />
                                 @endif
 
                                 {{-- SUFFIX --}}
                                 @if($suffix)
-                                    <span class="label">{{ $suffix }}</span>
+                                    <span class="{{ Mary::classes('label') }}">{{ $suffix }}</span>
                                 @endif
                             </label>
                         </div>
@@ -170,7 +170,7 @@ class Colorpicker extends Component
                     @if(!$omitError && $errors->has($errorFieldName()))
                         @foreach($errors->get($errorFieldName()) as $message)
                             @foreach(Arr::wrap($message) as $line)
-                                <div class="{{ $errorClass }}" x-class="text-error">{{ $line }}</div>
+                                <div class="{{ is_null($errorClass) ? Mary::classes('text-error') : Mary::classes()->addRaw($errorClass) }}" x-class="{{ Mary::classes('text-error') }}">{{ $line }}</div>
                                 @break($firstErrorOnly)
                             @endforeach
                             @break($firstErrorOnly)
@@ -179,7 +179,7 @@ class Colorpicker extends Component
 
                     {{-- HINT --}}
                     @if($hint)
-                        <div class="{{ $hintClass }}" x-classes="fieldset-label">{{ $hint }}</div>
+                        <div class="{{ is_null($hintClass) ? Mary::classes('fieldset-label') : Mary::classes()->addRaw($hintClass) }}" x-classes="{{ Mary::classes('fieldset-label') }}">{{ $hint }}</div>
                     @endif
                 </fieldset>
             </div>

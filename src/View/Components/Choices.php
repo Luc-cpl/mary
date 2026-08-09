@@ -16,7 +16,7 @@ class Choices extends Component
         public ?string $id = null,
         public ?string $label = null,
         public ?string $hint = null,
-        public ?string $hintClass = 'fieldset-label',
+        public ?string $hintClass = null,
         public ?string $icon = null,
         public ?string $iconRight = null,
         public ?bool $inline = false,
@@ -47,13 +47,13 @@ class Choices extends Component
 
         // Popover
         public ?string $popover = null,
-        public ?string $popoverIcon = "o-question-mark-circle",
+        public ?string $popoverIcon = 'o-question-mark-circle',
         public ?string $popoverTriggerClass = '',
         public ?string $popoverContentClass = '',
 
         // Validations
         public ?string $errorField = null,
-        public ?string $errorClass = 'text-error',
+        public ?string $errorClass = null,
         public ?bool $omitError = false,
         public ?bool $firstErrorOnly = false,
 
@@ -63,10 +63,10 @@ class Choices extends Component
         public mixed $prepend = null,
         public mixed $append = null
     ) {
-        $this->uuid = "mary" . md5(serialize($this)) . $id;
+        $this->uuid = 'mary' . md5(serialize($this)) . $id;
 
         if (($this->allowAll || $this->compact) && ($this->single || $this->searchable)) {
-            throw new Exception("`allow-all` and `compact` does not work combined with `single` or `searchable`.");
+            throw new Exception('`allow-all` and `compact` does not work combined with `single` or `searchable`.');
         }
     }
 
@@ -239,21 +239,21 @@ class Choices extends Component
                         @keydown.up="$focus.previous()"
                         @keydown.down="$focus.next()"
                     >
-                        <fieldset class="fieldset py-0">
+                        <fieldset class="{{ Mary::classes('fieldset py-0') }}">
                             {{-- STANDARD LABEL --}}
                             @if($label && !$inline)
-                                <legend class="fieldset-legend mb-0.5">
+                                <legend class="{{ Mary::classes('fieldset-legend mb-0.5') }}">
                                     {{ $label }}
 
                                     @if($attributes->get('required'))
-                                        <span class="text-error">*</span>
+                                        <span class="{{ Mary::classes('text-error') }}">*</span>
                                     @endif
 
                                     {{-- INPUT POPOVER --}}
                                     @if($popover)
                                         <x-mary-popover offset="5" position="top-start">
                                             <x-slot:trigger class="{{ $popoverTriggerClass }}">
-                                                <x-mary-icon :name="$popoverIcon" class="w-4 h-4 opacity-40 mb-0.5" />
+                                                <x-mary-icon :name="$popoverIcon" class="{{ Mary::classes('w-4 h-4 opacity-40 mb-0.5') }}" />
                                             </x-slot:trigger>
                                             <x-slot:content class="{{ $popoverContentClass }}">
                                                 {{ $popover }}
@@ -263,19 +263,19 @@ class Choices extends Component
                                 </legend>
                             @endif
 
-                            <label @class(["floating-label" => $label && $inline])>
+                            <label @maryClass(["floating-label" => $label && $inline])>
                                 {{-- FLOATING LABEL--}}
                                 @if ($label && $inline)
-                                    <span class="font-semibold">
+                                    <span class="{{ Mary::classes('font-semibold') }}">
                                         {{ $label }}
 
                                         @if($attributes->get('required'))
-                                            <span class="text-error">*</span>
+                                            <span class="{{ Mary::classes('text-error') }}">*</span>
                                         @endif
                                     </span>
                                 @endif
 
-                                <div @class(["w-full", "join" => $prepend || $append])>
+                                <div @maryClass(["w-full", "join" => $prepend || $append])>
                                     {{-- PREPEND --}}
                                     @if($prepend)
                                         {{ $prepend }}
@@ -294,7 +294,7 @@ class Choices extends Component
                                         @endif
 
                                         {{
-                                            $attributes->whereStartsWith('class')->class([
+                                            $attributes->whereStartsWith('class')->maryClass([
                                                 "select w-full min-h-[var(--size)] h-auto ps-2.5",
                                                 "join-item" => $prepend || $append,
                                                 "border-dashed" => $attributes->has("readonly") && $attributes->get("readonly") == true,
@@ -304,25 +304,25 @@ class Choices extends Component
                                     >
                                         {{-- PREFIX --}}
                                         @if($prefix)
-                                            <span class="label">{{ $prefix }}</span>
+                                            <span class="{{ Mary::classes('label') }}">{{ $prefix }}</span>
                                         @endif
 
                                         {{-- ICON LEFT --}}
                                         @if($icon)
-                                            <x-mary-icon :name="$icon" class="pointer-events-none w-4 h-4 opacity-40" />
+                                            <x-mary-icon :name="$icon" class="{{ Mary::classes('pointer-events-none w-4 h-4 opacity-40') }}" />
                                         @endif
 
-                                        <div class="w-full py-0.5 min-h-3 content-center text-wrap">
+                                        <div class="{{ Mary::classes('w-full py-0.5 min-h-3 content-center text-wrap') }}">
 
                                             {{-- SELECTED OPTIONS --}}
                                             <span wire:key="selected-options-{{ $uuid }}">
                                                 @if($compact)
-                                                    <div class="badge badge-soft">
-                                                        <span class="font-black" x-text="selectedOptions.length"></span> {{ $compactText }}
+                                                    <div class="{{ Mary::classes('badge badge-soft') }}">
+                                                        <span class="{{ Mary::classes('font-black') }}" x-text="selectedOptions.length"></span> {{ $compactText }}
                                                     </div>
                                                 @else
                                                     <template x-for="(option, index) in selectedOptions" :key="index">
-                                                        <span class="mary-choices-element cursor-pointer badge badge-soft m-0.5 !inline-block !h-auto">
+                                                        <span class="{{ Mary::classes('cursor-pointer badge badge-soft m-0.5 !inline-block !h-auto')->addRaw('mary-choices-element') }}">
                                                             {{-- SELECTION SLOT --}}
                                                             @if($selection)
                                                                 <span x-html="document.getElementById('selection-{{ $uuid . '-\' + option.'. $optionValue }}).innerHTML"></span>
@@ -331,7 +331,7 @@ class Choices extends Component
                                                             @endif
 
                                                             @if(!$isDisabled() && !$isReadonly())
-                                                                <x-mary-icon @click="toggle(option.{{ $optionValue }})" x-show="!isReadonly && !isDisabled && !isSingle" name="o-x-mark" class="w-4 h-4 hover:text-error" />
+                                                                <x-mary-icon @click="toggle(option.{{ $optionValue }})" x-show="!isReadonly && !isDisabled && !isSingle" name="o-x-mark" class="{{ Mary::classes('w-4 h-4 hover:text-error') }}" />
                                                             @endif
                                                         </span>
                                                     </template>
@@ -339,7 +339,7 @@ class Choices extends Component
                                             </span>
 
                                             {{-- PLACEHOLDER --}}
-                                            <span :class="(focused || !isSelectionEmpty) && 'hidden'" class="text-base-content/40">
+                                            <span :class="(focused || !isSelectionEmpty) && '{{ Mary::classes('hidden') }}'" class="{{ Mary::classes('text-base-content/40') }}">
                                                 {{ $attributes->get('placeholder') }}
                                             </span>
 
@@ -349,7 +349,7 @@ class Choices extends Component
                                                 @input="focus(); resize();"
                                                 @keydown.arrow-down.prevent="focus()"
                                                 :required="isRequired && isSelectionEmpty"
-                                                class="w-1 !inline-block outline-hidden"
+                                                class="{{ Mary::classes('w-1 !inline-block outline-hidden') }}"
 
                                                 {{ $attributes->whereStartsWith('@') }}
 
@@ -371,17 +371,17 @@ class Choices extends Component
 
                                         {{-- CLEAR ICON  --}}
                                         @if($clearable && !$isReadonly() && !$isDisabled())
-                                            <x-mary-icon @click="reset()" x-show="!isSelectionEmpty" name="o-x-mark" class="cursor-pointer w-4 h-4 opacity-40"/>
+                                            <x-mary-icon @click="reset()" x-show="!isSelectionEmpty" name="o-x-mark" class="{{ Mary::classes('cursor-pointer w-4 h-4 opacity-40') }}"/>
                                         @endif
 
                                         {{-- ICON RIGHT --}}
                                         @if($iconRight)
-                                            <x-mary-icon :name="$iconRight" class="pointer-events-none w-4 h-4 opacity-40" />
+                                            <x-mary-icon :name="$iconRight" class="{{ Mary::classes('pointer-events-none w-4 h-4 opacity-40') }}" />
                                         @endif
 
                                         {{-- SUFFIX --}}
                                         @if($suffix)
-                                            <span class="label">{{ $suffix }}</span>
+                                            <span class="{{ Mary::classes('label') }}">{{ $suffix }}</span>
                                         @endif
                                     </label>
 
@@ -396,7 +396,7 @@ class Choices extends Component
                             @if(!$omitError && $errors->has($errorFieldName()))
                                 @foreach($errors->get($errorFieldName()) as $message)
                                     @foreach(Arr::wrap($message) as $line)
-                                        <div class="{{ $errorClass }}" x-class="text-error">{{ $line }}</div>
+                                        <div class="{{ is_null($errorClass) ? Mary::classes('text-error') : Mary::classes()->addRaw($errorClass) }}" x-class="{{ Mary::classes('text-error') }}">{{ $line }}</div>
                                         @break($firstErrorOnly)
                                     @endforeach
                                     @break($firstErrorOnly)
@@ -405,31 +405,31 @@ class Choices extends Component
 
                             {{-- HINT --}}
                             @if($hint)
-                                <div class="{{ $hintClass }}" x-classes="fieldset-label">{{ $hint }}</div>
+                                <div class="{{ is_null($hintClass) ? Mary::classes('fieldset-label') : Mary::classes()->addRaw($hintClass) }}" x-classes="{{ Mary::classes('fieldset-label') }}">{{ $hint }}</div>
                             @endif
                         </fieldset>
 
                         {{-- OPTIONS LIST --}}
-                        <div x-cloak x-show="focused" class="relative" wire:key="options-list-main-{{ $uuid }}">
+                        <div x-cloak x-show="focused" class="{{ Mary::classes('relative') }}" wire:key="options-list-main-{{ $uuid }}">
                             <div
                                 wire:key="options-list-{{ $uuid }}"
-                                class="{{ $height }} w-full absolute z-10 shadow-xl bg-base-100 border border-base-content/10 rounded-lg cursor-pointer overflow-y-auto"
+                                class="{{ Mary::classes('w-full absolute z-10 shadow-xl bg-base-100 border border-base-content/10 rounded-lg cursor-pointer overflow-y-auto')->addRaw($height) }}"
                                 x-anchor.bottom-start="$refs.container"
                             >
 
                                 {{-- PROGRESS --}}
                                 @if(!$noProgress)
-                                    <progress wire:loading wire:target="{{ preg_replace('/\((.*?)\)/', '', $searchFunction) }}" class="progress absolute top-0 h-0.5"></progress>
+                                    <progress wire:loading wire:target="{{ preg_replace('/\((.*?)\)/', '', $searchFunction) }}" class="{{ Mary::classes('progress absolute top-0 h-0.5') }}"></progress>
                                 @endif
 
                                {{-- SELECT ALL --}}
                                @if($allowAll)
                                    <div
                                         wire:key="allow-all-{{ rand() }}"
-                                        class="font-bold   border border-s-4 border-s-base-content/10 border-base-200 hover:bg-base-200"
+                                        class="{{ Mary::classes('font-bold   border border-s-4 border-s-base-content/10 border-base-200 hover:bg-base-200') }}"
                                    >
-                                        <div x-show="!isAllSelected" @click="selectAll()" class="p-3 underline decoration-wavy decoration-info">{{ $allowAllText }}</div>
-                                        <div x-show="isAllSelected" @click="reset()" class="p-3 underline decoration-wavy decoration-error">{{ $removeAllText }}</div>
+                                        <div x-show="!isAllSelected" @click="selectAll()" class="{{ Mary::classes('p-3 underline decoration-wavy decoration-info') }}">{{ $allowAllText }}</div>
+                                        <div x-show="isAllSelected" @click="reset()" class="{{ Mary::classes('p-3 underline decoration-wavy decoration-error') }}">{{ $removeAllText }}</div>
                                    </div>
                                @endif
 
@@ -437,7 +437,7 @@ class Choices extends Component
                                 <div
                                     x-show="noResults"
                                     wire:key="no-results-{{ rand() }}"
-                                    class="p-3 decoration-wavy decoration-warning underline font-bold border border-s-4 border-s-warning border-b-base-200"
+                                    class="{{ Mary::classes('p-3 decoration-wavy decoration-warning underline font-bold border border-s-4 border-s-warning border-b-base-200') }}"
                                 >
                                     {{ $noResultText }}
                                 </div>
@@ -447,8 +447,8 @@ class Choices extends Component
                                         wire:key="option-{{ data_get($option, $optionValue) }}"
                                         @click="toggle({{ $getOptionValue($option) }}, true)"
                                         @keydown.enter="toggle({{ $getOptionValue($option) }}, true)"
-                                        :class="isActive({{ $getOptionValue($option) }}) && 'border-s-4 border-s-base-content'"
-                                        class="border-s-4 border-base-content/10 focus:bg-base-200 focus:outline-none"
+                                        :class="isActive({{ $getOptionValue($option) }}) && '{{ Mary::classes('border-s-4 border-s-base-content') }}'"
+                                        class="{{ Mary::classes('border-s-4 border-base-content/10 focus:bg-base-200 focus:outline-none') }}"
                                         tabindex="0"
                                     >
                                         {{-- ITEM SLOT --}}
@@ -460,7 +460,7 @@ class Choices extends Component
 
                                         {{-- SELECTION SLOT --}}
                                         @if($selection)
-                                            <span id="selection-{{ $uuid }}-{{ data_get($option, $optionValue) }}" class="hidden">
+                                            <span id="selection-{{ $uuid }}-{{ data_get($option, $optionValue) }}" class="{{ Mary::classes('hidden') }}">
                                                 {{ $selection($option) }}
                                             </span>
                                         @endif

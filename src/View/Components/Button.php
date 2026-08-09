@@ -29,7 +29,7 @@ class Button extends Component
         public ?string $tooltipRight = null,
         public ?string $tooltipBottom = null,
     ) {
-        $this->uuid = "mary" . md5(serialize($this)) . $id;
+        $this->uuid = 'mary' . md5(serialize($this)) . $id;
         $this->tooltip = $this->tooltip ?? $this->tooltipLeft ?? $this->tooltipRight ?? $this->tooltipBottom;
         $this->tooltipPosition = $this->tooltipLeft ? 'lg:tooltip-left' : ($this->tooltipRight ? 'lg:tooltip-right' : ($this->tooltipBottom ? 'lg:tooltip-bottom' : 'lg:tooltip-top'));
     }
@@ -54,7 +54,7 @@ class Button extends Component
 
                     wire:key="{{ $uuid }}"
                     {{ $attributes->whereDoesntStartWith('class')->merge(['type' => 'button']) }}
-                    {{ $attributes->class(['btn', "!inline-flex lg:tooltip $tooltipPosition" => $tooltip]) }}
+                    {{ $attributes->maryClass(['btn', "!inline-flex lg:tooltip $tooltipPosition" => $tooltip]) }}
 
                     @if($link && $external)
                         target="_blank"
@@ -76,23 +76,23 @@ class Button extends Component
 
                     <!-- SPINNER LEFT -->
                     @if($spinner && !$iconRight)
-                        <span wire:loading wire:target="{{ $spinnerTarget() }}" class="loading loading-spinner w-5 h-5"></span>
+                        <span wire:loading wire:target="{{ $spinnerTarget() }}" class="{{ Mary::classes('loading loading-spinner w-5 h-5') }}"></span>
                     @endif
 
                     <!-- ICON -->
                     @if($icon)
-                        <span class="block" @if($spinner) wire:loading.class="hidden" wire:target="{{ $spinnerTarget() }}" @endif>
+                        <span class="{{ Mary::classes('block') }}" @if($spinner) wire:loading.class="{{ Mary::classes('hidden') }}" wire:target="{{ $spinnerTarget() }}" @endif>
                             <x-mary-icon :name="$icon" />
                         </span>
                     @endif
 
                     <!-- LABEL / SLOT -->
                     @if($label)
-                        <span @class(["hidden lg:block" => $responsive ])>
+                        <span @maryClass(["hidden lg:block" => $responsive ])>
                             {{ $label }}
                         </span>
                         @if(strlen($badge ?? '') > 0)
-                            <span class="badge badge-sm {{ $badgeClasses }}">{{ $badge }}</span>
+                            <span class="{{ Mary::classes('badge badge-sm')->addRaw($badgeClasses) }}">{{ $badge }}</span>
                         @endif
                     @else
                         {{ $slot }}
@@ -100,14 +100,14 @@ class Button extends Component
 
                     <!-- ICON RIGHT -->
                     @if($iconRight)
-                        <span class="block" @if($spinner) wire:loading.class="hidden" wire:target="{{ $spinnerTarget() }}" @endif>
+                        <span class="{{ Mary::classes('block') }}" @if($spinner) wire:loading.class="{{ Mary::classes('hidden') }}" wire:target="{{ $spinnerTarget() }}" @endif>
                             <x-mary-icon :name="$iconRight" />
                         </span>
                     @endif
 
                     <!-- SPINNER RIGHT -->
                     @if($spinner && $iconRight)
-                        <span wire:loading wire:target="{{ $spinnerTarget() }}" class="loading loading-spinner w-5 h-5"></span>
+                        <span wire:loading wire:target="{{ $spinnerTarget() }}" class="{{ Mary::classes('loading loading-spinner w-5 h-5') }}"></span>
                     @endif
 
                 @if(!$link)

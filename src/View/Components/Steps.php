@@ -13,11 +13,11 @@ class Steps extends Component
     public function __construct(
         public ?string $id = null,
         public bool $vertical = false,
-        public ?string $stepsColor = 'step-neutral',
+        public ?string $stepsColor = null,
         public ?string $stepperClasses = null
 
     ) {
-        $this->uuid = "mary" . md5(serialize($this)) . $id;
+        $this->uuid = 'mary' . md5(serialize($this)) . $id;
     }
 
     public function render(): View|Closure|string
@@ -30,21 +30,21 @@ class Steps extends Component
                                 init() {
                                     // Fix weird issue when navigating back
                                     document.addEventListener('livewire:navigating', () => {
-                                        document.querySelectorAll('.step').forEach(el =>  el.remove());
+                                        document.querySelectorAll('.' + CSS.escape('{{ Mary::classes('step') }}')).forEach(el => el.remove());
                                     });
                                 }
                         }"
                     >
                         <!-- STEP LABELS -->
-                        <ul class="steps [&>*:nth-child(2)]:before:hidden {{ $stepperClasses }}">
+                        <ul class="{{ Mary::classes('steps [&>*:nth-child(2)]:before:hidden')->addRaw($stepperClasses) }}">
                             <template x-for="(step, index) in steps" :key="index">
                                 <li
-                                    class="step"
+                                    class="{{ Mary::classes('step') }}"
                                     :data-content="!step.icon ? step.dataContent || (index + 1) : ''"
-                                    :class="(index + 1 <= current) && '{{ $stepsColor }} ' + step.classes"
+                                    :class="(index + 1 <= current) && '{{ is_null($stepsColor) ? Mary::classes('step-neutral') : Mary::classes()->addRaw($stepsColor) }} ' + step.classes"
                                 >
                                         <template x-if="step.icon">
-                                            <span x-html="step.icon" class="step-icon"></span>
+                                            <span x-html="step.icon" class="{{ Mary::classes('step-icon') }}"></span>
                                         </template>
                                         <span x-html="step.text"></span>
                                 </li>
@@ -57,7 +57,7 @@ class Steps extends Component
                         </div>
 
                         <!-- Force Tailwind compile steps color -->
-                        <span class="hidden step-primary step-error step-success step-neutral step-info step-accent"></span>
+                        <span class="{{ Mary::classes('hidden step-primary step-error step-success step-neutral step-info step-accent') }}"></span>
                     </div>
             BLADE;
     }

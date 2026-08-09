@@ -5,7 +5,9 @@ namespace Mary;
 use Arr;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\View\ComponentAttributeBag;
 use Mary\Console\Commands\MaryBootcampCommand;
+use Mary\Console\Commands\MaryBuildClassSourceCommand;
 use Mary\Console\Commands\MaryInstallCommand;
 use Mary\View\Components\Accordion;
 use Mary\View\Components\Alert;
@@ -195,6 +197,19 @@ class MaryServiceProvider extends ServiceProvider
     public function registerBladeDirectives(): void
     {
         $this->registerScopeDirective();
+        $this->registerClassDirective();
+    }
+
+    public function registerClassDirective(): void
+    {
+        Blade::directive('maryClass', function ($expression) {
+            return 'class="<?php echo e(app(\'mary\')->classes(' . $expression . ')); ?>"';
+        });
+
+        ComponentAttributeBag::macro('maryClass', function (string|array|null $classes) {
+            /** @var ComponentAttributeBag $this */
+            return $this->class((string) app('mary')->classes($classes));
+        });
     }
 
     public function registerScopeDirective(): void
@@ -243,9 +258,7 @@ class MaryServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__ . '/../config/mary.php', 'mary');
 
         // Register the service the package provides.
-        $this->app->singleton('mary', function ($app) {
-            return new Mary();
-        });
+        $this->app->singleton('mary', fn () => new Mary);
     }
 
     /**
@@ -268,6 +281,10 @@ class MaryServiceProvider extends ServiceProvider
             __DIR__ . '/../config/mary.php' => config_path('mary.php'),
         ], 'mary.config');
 
-        $this->commands([MaryInstallCommand::class, MaryBootcampCommand::class]);
+        $this->commands([
+            MaryInstallCommand::class,
+            MaryBootcampCommand::class,
+            MaryBuildClassSourceCommand::class,
+        ]);
     }
 }

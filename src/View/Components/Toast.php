@@ -9,9 +9,8 @@ use Illuminate\View\Component;
 class Toast extends Component
 {
     public function __construct(
-        public string $position = 'toast-top toast-end',
-    ) {
-    }
+        public ?string $position = null,
+    ) {}
 
     public function render(): View|Closure|string
     {
@@ -114,24 +113,24 @@ class Toast extends Component
                     @mary-toast.window="start($event.detail.toast)"
                 >
                     <div
-                        class="toast !whitespace-normal rounded-box fixed cursor-pointer z-[999] overflow-hidden"
-                        :class="toast.position || '{{ $position }}'"
+                        class="{{ Mary::classes('toast !whitespace-normal rounded-box fixed cursor-pointer z-[999] overflow-hidden') }}"
+                        :class="toast.position || '{{ is_null($position) ? Mary::classes('toast-top toast-end') : Mary::classes()->addRaw($position) }}'"
                         x-show="show"
                         @mouseenter="pause()"
                         @mouseleave="resume()"
-                        x-classes="alert alert-success alert-warning alert-error alert-info top-10 end-10 toast toast-top toast-bottom toast-center toast-end toast-middle toast-start"
+                        x-classes="{{ Mary::classes('alert alert-success alert-warning alert-error alert-info top-10 end-10 toast toast-top toast-bottom toast-center toast-end toast-middle toast-start') }}"
                         @click="show = false; clearInterval(interval)"
                     >
-                        <div class="alert gap-2" :class="toast.css">
-                            <div x-html="toast.icon" class="hidden sm:inline-block"></div>
-                            <div class="grid">
-                                <div x-html="toast.title" class="font-bold"></div>
-                                <div x-html="toast.description" class="text-xs"></div>
+                        <div class="{{ Mary::classes('alert gap-2') }}" :class="toast.css">
+                            <div x-html="toast.icon" class="{{ Mary::classes('hidden sm:inline-block') }}"></div>
+                            <div class="{{ Mary::classes('grid') }}">
+                                <div x-html="toast.title" class="{{ Mary::classes('font-bold') }}"></div>
+                                <div x-html="toast.description" class="{{ Mary::classes('text-xs') }}"></div>
                             </div>
                         </div>
                         <progress
                             x-show="!toast.noProgress"
-                            class="-mt-3 h-1 w-full progress"
+                            class="{{ Mary::classes('-mt-3 h-1 w-full progress') }}"
                             :class="toast.progressClass"
                             :max="maxProgress"
                             :value="progress">

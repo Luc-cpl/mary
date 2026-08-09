@@ -2,7 +2,8 @@
 
 namespace Mary\Traits;
 
-use Blade;
+use Illuminate\Support\Facades\Blade;
+use Mary\Facades\Mary;
 
 trait Toast
 {
@@ -12,19 +13,27 @@ trait Toast
         ?string $description = null,
         ?string $position = null,
         string $icon = 'o-information-circle',
-        string $css = 'alert-info',
+        ?string $css = null,
         int $timeout = 3000,
         ?string $redirectTo = null,
         bool $noProgress = false,
         ?string $progressClass = null,
     ) {
+        $defaultCss = match ($type) {
+            'success' => Mary::classes('alert-success'),
+            'warning' => Mary::classes('alert-warning'),
+            'error' => Mary::classes('alert-error'),
+            default => Mary::classes('alert-info'),
+        };
+        $iconClasses = Mary::classes('w-7 h-7');
+
         $toast = [
             'type' => $type,
             'title' => $title,
             'description' => $description,
             'position' => $position,
-            'icon' => Blade::render("<x-mary-icon class='w-7 h-7' name='".$icon."' />"),
-            'css' => $css,
+            'icon' => Blade::render("<x-mary-icon class='{$iconClasses}' name='".$icon."' />"),
+            'css' => $css ?? (string) $defaultCss,
             'timeout' => $timeout,
             'noProgress' => $noProgress,
             'progressClass' => $progressClass,
@@ -45,7 +54,7 @@ trait Toast
         ?string $description = null,
         ?string $position = null,
         string $icon = 'o-check-circle',
-        string $css = 'alert-success',
+        ?string $css = null,
         int $timeout = 3000,
         ?string $redirectTo = null,
         bool $noProgress = false,
@@ -59,7 +68,7 @@ trait Toast
         ?string $description = null,
         ?string $position = null,
         string $icon = 'o-exclamation-triangle',
-        string $css = 'alert-warning',
+        ?string $css = null,
         int $timeout = 3000,
         ?string $redirectTo = null,
         bool $noProgress = false,
@@ -73,7 +82,7 @@ trait Toast
         ?string $description = null,
         ?string $position = null,
         string $icon = 'o-x-circle',
-        string $css = 'alert-error',
+        ?string $css = null,
         int $timeout = 3000,
         ?string $redirectTo = null,
         bool $noProgress = false,
@@ -87,7 +96,7 @@ trait Toast
         ?string $description = null,
         ?string $position = null,
         string $icon = 'o-information-circle',
-        string $css = 'alert-info',
+        ?string $css = null,
         int $timeout = 3000,
         ?string $redirectTo = null,
         bool $noProgress = false,

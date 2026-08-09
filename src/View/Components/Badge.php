@@ -17,16 +17,16 @@ class Badge extends Component
         public ?string $iconRight = null,
 
     ) {
-        $this->uuid = "mary" . md5(serialize($this)) . $id;
+        $this->uuid = 'mary' . md5(serialize($this)) . $id;
     }
 
     public function render(): View|Closure|string
     {
         return <<<'HTML'
-                <div {{ $attributes->class(["badge"])}}>
+                <div {{ $attributes->maryClass(["badge"])}}>
                     <!-- ICON -->
                     @if($icon)
-                        <x-mary-icon :name="$icon" class="h-4 w-4" />
+                        <x-mary-icon :name="$icon" class="{{ Mary::classes('h-4 w-4') }}" />
                     @endif
 
                     <!-- VALUE / SLOT -->
@@ -34,7 +34,7 @@ class Badge extends Component
                     
                     <!-- ICON RIGHT -->
                     @if($iconRight)
-                        <x-mary-icon :name="$iconRight" class="h-4 w-4" />
+                        <x-mary-icon :name="$iconRight" class="{{ Mary::classes('h-4 w-4') }}" />
                     @endif
                 </div>
             HTML;

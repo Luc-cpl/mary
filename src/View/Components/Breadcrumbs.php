@@ -23,13 +23,13 @@ class Breadcrumbs extends Component
         public ?string $id = null,
         public array $items = [],
         public string $separator = 'o-chevron-right',
-        public ?string $linkItemClass = "hover:underline text-sm",
-        public ?string $textItemClass = "text-sm",
-        public ?string $iconClass = "h-4 w-4",
-        public ?string $separatorClass = "h-3 w-3 mx-1 text-base-content/40",
+        public ?string $linkItemClass = null,
+        public ?string $textItemClass = null,
+        public ?string $iconClass = null,
+        public ?string $separatorClass = null,
         public ?bool $noWireNavigate = false,
     ) {
-        $this->uuid = "mary" . md5(serialize($this)) . $id;
+        $this->uuid = 'mary' . md5(serialize($this)) . $id;
     }
 
     public function tooltip(array $element): ?string
@@ -50,12 +50,12 @@ class Breadcrumbs extends Component
     public function render(): View|Closure|string
     {
         return <<<'BLADE'
-                <ul {{ $attributes->merge(['class' => 'flex items-center']) }} wire:key="{{ $uuid }}">
+                <ul {{ $attributes->class(Mary::classes('flex items-center')) }} wire:key="{{ $uuid }}">
                     @foreach($items as $element)
 
                         {{-- Tooltip --}}
                         <li
-                            @class(["lg:tooltip {$tooltipPosition($element)}" => $tooltip($element), "hidden sm:block" => !$loop->first && !$loop->last])
+                            @maryClass(["lg:tooltip {$tooltipPosition($element)}" => $tooltip($element), "hidden sm:block" => !$loop->first && !$loop->last])
 
                             @if($tooltip($element))
                                 data-tip="{{ $tooltip($element) }}"
@@ -63,14 +63,14 @@ class Breadcrumbs extends Component
                         >
 
                             @if ($element['link'] ?? null)
-                                <a href="{{ $element['link'] }}" @if(!$noWireNavigate) wire:navigate @endif @class([$linkItemClass])>
+                                <a href="{{ $element['link'] }}" @if(!$noWireNavigate) wire:navigate @endif class="{{ is_null($linkItemClass) ? Mary::classes('hover:underline text-sm') : Mary::classes()->addRaw($linkItemClass) }}">
                             @else
-                                <span @class([$textItemClass])>
+                                <span class="{{ is_null($textItemClass) ? Mary::classes('text-sm') : Mary::classes()->addRaw($textItemClass) }}">
                             @endif
 
                                 {{-- Icon --}}
                                 @if($element['icon'] ?? null)
-                                    <x-mary-icon :name="$element['icon']" @class(["mb-0.5", $iconClass]) />
+                                    <x-mary-icon :name="$element['icon']" class="{{ Mary::classes('mb-0.5')->add(is_null($iconClass) ? 'h-4 w-4' : null)->addRaw($iconClass) }}" />
                                 @endif
 
                                 {{-- Text --}}
@@ -86,17 +86,17 @@ class Breadcrumbs extends Component
                         </li>
 
                         @if($loop->remaining == 1 && $loop->count > 2)
-                            <span class="sm:hidden">...</span>
+                            <span class="{{ Mary::classes('sm:hidden') }}">...</span>
                         @endif
 
                         {{-- Separator --}}
-                        <span @class([
+                        <span @maryClass([
                                 "hidden",
                                 "!block" => ($loop->first || $loop->remaining == 1) && $loop->count > 1,
                                 "sm:!block" => !$loop->last && $loop->count > 1
                              ])
                         >
-                            <x-mary-icon :name="$separator" @class([$separatorClass]) />
+                            <x-mary-icon :name="$separator" class="{{ is_null($separatorClass) ? Mary::classes('h-3 w-3 mx-1 text-base-content/40') : Mary::classes()->addRaw($separatorClass) }}" />
                         </span>
                     @endforeach
                 </ul>

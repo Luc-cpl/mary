@@ -20,23 +20,25 @@ class Step extends Component
         public ?string $dataContent = null,
 
     ) {
-        $this->uuid = "mary" . md5(serialize($this)) . $id;
+        $this->uuid = 'mary' . md5(serialize($this)) . $id;
     }
 
     public function iconHTML(): ?string
     {
-        return Blade::render("<x-mary-icon name='" . $this->icon . "' class='w-4 w-4' />");
+        $classes = app('mary')->classes('w-4 w-4');
+
+        return Blade::render("<x-mary-icon name='" . $this->icon . "' class='{$classes}' />");
     }
 
     public function render(): View|Closure|string
     {
         return <<<'BLADE'
                     <div
-                        class="hidden"
+                        class="{{ Mary::classes('hidden') }}"
                         x-init="steps.push({ step: '{{ $step }}', text: '{{ $text }}', classes: '{{ $stepClasses }}' @if($icon) , icon: {{ json_encode($iconHTML()) }}  @endif @if($dataContent), dataContent: '{{ $dataContent }}' @endif })"
                     ></div>
 
-                    <div x-show="current == '{{ $step }}'" {{ $attributes->class("px-1") }} >
+                    <div x-show="current == '{{ $step }}'" {{ $attributes->class(Mary::classes("px-1")) }} >
                         {{ $slot }}
                     </div>
             BLADE;

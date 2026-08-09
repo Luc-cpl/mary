@@ -18,10 +18,10 @@ class Header extends Component
         public ?string $subtitle = null,
         public ?bool $separator = false,
         public ?string $progressIndicator = null,
-        public string $progressIndicatorClass = "progress-primary",
+        public ?string $progressIndicatorClass = null,
         public ?bool $withAnchor = false,
-        public ?string $size = 'text-2xl',
-        public ?string $weight = 'font-extrabold',
+        public ?string $size = null,
+        public ?string $weight = null,
         public ?bool $useH1 = false,
 
         // Icon
@@ -48,10 +48,10 @@ class Header extends Component
     public function render(): View|Closure|string
     {
         return <<<'HTML'
-                <div id="{{ $anchor }}" {{ $attributes->class(["mb-10", "mary-header-anchor" => $withAnchor]) }}>
-                    <div class="flex flex-wrap gap-5 justify-between items-center">
+                <div id="{{ $anchor }}" {{ $attributes->class(Mary::classes('mb-10')->addRaw(['mary-header-anchor' => $withAnchor])) }}>
+                    <div class="{{ Mary::classes('flex flex-wrap gap-5 justify-between items-center') }}">
                         <div>
-                            {!! "<{$titleTag}" !!} @class(["flex", "items-center", "$size $weight", is_string($title) ? '' : $title?->attributes->get('class') ]) >
+                            {!! "<{$titleTag}" !!} class="{{ Mary::classes('flex items-center')->add(is_null($size) ? 'text-2xl' : null)->add(is_null($weight) ? 'font-extrabold' : null)->addRaw($size)->addRaw($weight)->addRaw(is_string($title) ? '' : $title?->attributes->get('class')) }}" >
                                 @if($withAnchor)
                                     <a href="#{{ $anchor }}">
                                 @endif
@@ -60,7 +60,7 @@ class Header extends Component
                                     <x-mary-icon name="{{ $icon }}" class="{{ $iconClasses }}" />
                                 @endif
 
-                                <span @class(["ml-2" => $icon])>{{ $title }}</span>
+                                <span @maryClass(["ml-2" => $icon])>{{ $title }}</span>
 
                                 @if($withAnchor)
                                     </a>
@@ -68,34 +68,34 @@ class Header extends Component
                             {!! "</{$titleTag}>" !!}
 
                             @if($subtitle)
-                                <div @class(["text-base-content/50 text-sm mt-1", is_string($subtitle) ? '' : $subtitle?->attributes->get('class') ]) >
+                                <div class="{{ Mary::classes('text-base-content/50 text-sm mt-1')->addRaw(is_string($subtitle) ? '' : $subtitle?->attributes->get('class')) }}" >
                                     {{ $subtitle }}
                                 </div>
                             @endif
                         </div>
 
                         @if($middle)
-                            <div @class(["flex items-center justify-center gap-3 grow order-last sm:order-none", is_string($middle) ? '' : $middle?->attributes->get('class')])>
-                                <div class="w-full lg:w-auto">
+                            <div class="{{ Mary::classes('flex items-center justify-center gap-3 grow order-last sm:order-none')->addRaw(is_string($middle) ? '' : $middle?->attributes->get('class')) }}">
+                                <div class="{{ Mary::classes('w-full lg:w-auto') }}">
                                     {{ $middle }}
                                 </div>
                             </div>
                         @endif
 
                         @if($actions)
-                            <div @class(["flex items-center gap-3", is_string($actions) ? '' : $actions?->attributes->get('class') ]) >
+                            <div class="{{ Mary::classes('flex items-center gap-3')->addRaw(is_string($actions) ? '' : $actions?->attributes->get('class')) }}" >
                                 {{ $actions }}
                             </div>
                         @endif
                     </div>
 
                     @if($separator)
-                        <hr class="border-t-[length:var(--border)] border-base-content/10 mt-3" />
+                        <hr class="{{ Mary::classes('border-t-[length:var(--border)] border-base-content/10 mt-3') }}" />
 
                         @if($progressIndicator)
-                            <div class="h-0.5 -mt-4 mb-4">
+                            <div class="{{ Mary::classes('h-0.5 -mt-4 mb-4') }}">
                                 <progress
-                                    class="progress {{ $progressIndicatorClass }} w-full h-[var(--border)]"
+                                    class="{{ Mary::classes('progress w-full h-[var(--border)]')->add(is_null($progressIndicatorClass) ? 'progress-primary' : null)->addRaw($progressIndicatorClass) }}"
                                     wire:loading
 
                                     @if($progressTarget())

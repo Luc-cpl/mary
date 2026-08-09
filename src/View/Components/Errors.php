@@ -17,7 +17,7 @@ class Errors extends Component
         public ?string $icon = 'o-x-circle',
         public ?array $only = [],
     ) {
-        $this->uuid = "mary" . md5(serialize($this)) . $id;
+        $this->uuid = 'mary' . md5(serialize($this)) . $id;
     }
 
     public function render(): View|Closure|string
@@ -25,24 +25,24 @@ class Errors extends Component
         return <<<'BLADE'
                 @if ($errors->any())
                     <div>
-                        <div {{ $attributes->class(["alert alert-error rounded rounded-sm"]) }} >
-                            <div class="grid gap-3">
-                                <div class="flex gap-2">
+                        <div {{ $attributes->maryClass(["alert alert-error rounded rounded-sm"]) }} >
+                            <div class="{{ Mary::classes('grid gap-3') }}">
+                                <div class="{{ Mary::classes('flex gap-2') }}">
                                     @if($title)
-                                        <x-mary-icon :name="$icon" class="w-6 h-6 mt-0.5" />
+                                        <x-mary-icon :name="$icon" class="{{ Mary::classes('w-6 h-6 mt-0.5') }}" />
                                     @endif
                                     <div>
                                         @if($title)
-                                            <div class="font-bold text-lg">{{ $title }}</div>
+                                            <div class="{{ Mary::classes('font-bold text-lg') }}">{{ $title }}</div>
                                         @endif
 
                                         @if($description)
-                                            <div class="font-semibold">{{ $description }}</div>
+                                            <div class="{{ Mary::classes('font-semibold') }}">{{ $description }}</div>
                                         @endif
                                     </div>
                                 </div>
                                 <div>
-                                    <ul class="list-disc ms-5 space-y-2 sm:ms-12 pb-3">
+                                    <ul class="{{ Mary::classes('list-disc ms-5 space-y-2 sm:ms-12 pb-3') }}">
                                        @foreach ($errors->all() as $error)
                                            <li>{{ $error }}</li>
                                        @endforeach

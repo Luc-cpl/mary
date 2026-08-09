@@ -19,24 +19,24 @@ class ImageLibrary extends Component
         public ?string $hint = null,
         public ?bool $hideErrors = false,
         public ?bool $hideProgress = false,
-        public ?string $changeText = "Change",
-        public ?string $cropText = "Crop",
-        public ?string $removeText = "Remove",
-        public ?string $cropTitleText = "Crop image",
-        public ?string $cropCancelText = "Cancel",
-        public ?string $cropSaveText = "Crop",
-        public ?string $addFilesText = "Add images",
+        public ?string $changeText = 'Change',
+        public ?string $cropText = 'Crop',
+        public ?string $removeText = 'Remove',
+        public ?string $cropTitleText = 'Crop image',
+        public ?string $cropCancelText = 'Cancel',
+        public ?string $cropSaveText = 'Crop',
+        public ?string $addFilesText = 'Add images',
         public ?array $cropConfig = [],
         public Collection $preview = new Collection(),
 
-	    // Popover
+        // Popover
         public ?string $popover = null,
-        public ?string $popoverIcon = "o-question-mark-circle",
+        public ?string $popoverIcon = 'o-question-mark-circle',
         public ?string $popoverTriggerClass = '',
         public ?string $popoverContentClass = '',
 
     ) {
-        $this->uuid = "mary" . md5(serialize($this)) . $id;
+        $this->uuid = 'mary' . md5(serialize($this)) . $id;
     }
 
     public function modelName(): ?string
@@ -139,21 +139,21 @@ class ImageLibrary extends Component
 
                 {{ $attributes->whereStartsWith('class') }}
             >
-                <fieldset class="fieldset py-0">
+                <fieldset class="{{ Mary::classes('fieldset py-0') }}">
                     {{-- STANDARD LABEL --}}
                     @if($label)
-                        <legend class="fieldset-legend mb-0.5">
+                        <legend class="{{ Mary::classes('fieldset-legend mb-0.5') }}">
                             {{ $label }}
 
                             @if($attributes->get('required'))
-                                <span class="text-error">*</span>
+                                <span class="{{ Mary::classes('text-error') }}">*</span>
                             @endif
                             
                             {{-- INPUT POPOVER --}}
                             @if($popover)
                                 <x-mary-popover offset="5" position="top-start">
                                     <x-slot:trigger class="{{ $popoverTriggerClass }}">
-                                        <x-mary-icon :name="$popoverIcon" class="w-4 h-4 opacity-40 mb-0.5" />
+                                        <x-mary-icon :name="$popoverIcon" class="{{ Mary::classes('w-4 h-4 opacity-40 mb-0.5') }}" />
                                     </x-slot:trigger>
                                     <x-slot:content class="{{ $popoverContentClass }}">
                                         {{ $popover }}
@@ -165,27 +165,27 @@ class ImageLibrary extends Component
 
                     {{-- PREVIEW AREA --}}
                     <div
-                        :class="(processing || indeterminate) && 'opacity-50 pointer-events-none'"
-                        @class(["relative", "hidden" => $preview->count() == 0])
+                        :class="(processing || indeterminate) && '{{ Mary::classes('opacity-50 pointer-events-none') }}'"
+                        @maryClass(["relative", "hidden" => $preview->count() == 0])
                     >
                         <div
                             x-data="{ sortable: null }"
-                            x-init="sortable = new Sortable($el, { animation: 150, ghostClass: 'bg-base-300', filter: '.ignore-drag', onEnd: (ev) => refreshMediaOrder(sortable.toArray()) })"
-                            class="border-[length:var(--border)] border-base-content/10 border-dotted rounded-lg"
+                            x-init="sortable = new Sortable($el, { animation: 150, ghostClass: '{{ Mary::classes('bg-base-300') }}', filter: '.ignore-drag', onEnd: (ev) => refreshMediaOrder(sortable.toArray()) })"
+                            class="{{ Mary::classes('border-[length:var(--border)] border-base-content/10 border-dotted rounded-lg') }}"
                         >
                             @foreach($preview as $key => $image)
-                                <div class="relative border-b-base-content/10 border-b-[length:var(--border)] border-dotted last:border-none cursor-move hover:bg-base-200" data-id="{{ $image['uuid'] }}">
-                                    <div wire:key="preview-{{ $image['uuid'] }}" class="py-2 ps-16 pe-10 tooltip" data-tip="{{ $changeText }}">
+                                <div class="{{ Mary::classes('relative border-b-base-content/10 border-b-[length:var(--border)] border-dotted last:border-none cursor-move hover:bg-base-200') }}" data-id="{{ $image['uuid'] }}">
+                                    <div wire:key="preview-{{ $image['uuid'] }}" class="{{ Mary::classes('py-2 ps-16 pe-10 tooltip') }}" data-tip="{{ $changeText }}">
                                         {{-- IMAGE --}}
                                         <img
                                             src="{{ $image['url'] }}"
-                                            class="h-24 cursor-pointer border-2 border-base-content/10 rounded-lg hover:scale-105 transition-all ease-in-out"
+                                            class="{{ Mary::classes('h-24 cursor-pointer border-2 border-base-content/10 rounded-lg hover:scale-105 transition-all ease-in-out') }}"
                                             @click="document.getElementById('file-{{ $uuid}}-{{ $key }}').click()"
                                             id="image-{{ $modelName().'.'.$key  }}-{{ $uuid }}" />
 
                                         {{-- VALIDATION --}}
                                          @error($modelName().'.'.$key)
-                                            <div class="text-error label-text-alt p-1">{{ $validationMessage($message) }}</div>
+                                            <div class="{{ Mary::classes('text-error label-text-alt p-1') }}">{{ $validationMessage($message) }}</div>
                                          @enderror
 
                                         {{-- HIDDEN FILE INPUT --}}
@@ -194,15 +194,15 @@ class ImageLibrary extends Component
                                             id="file-{{ $uuid}}-{{ $key }}"
                                             wire:model="{{ $modelName().'.'.$key  }}"
                                             accept="{{ $attributes->get('accept') ?? $mimes }}"
-                                            class="hidden"
+                                            class="{{ Mary::classes('hidden') }}"
                                             @change="progress = 1"
                                             />
                                     </div>
 
                                     {{-- ACTIONS --}}
-                                    <div class="absolute flex flex-col gap-2 top-3 start-3 cursor-pointer  p-2 rounded-lg ignore-drag">
-                                        <x-mary-button @click="removeMedia('{{ $image['uuid'] }}', '{{ $image['url'] }}')" @touchend.prevent="removeMedia('{{ $image['uuid'] }}', '{{ $image['url'] }}')" icon="o-x-circle" :tooltip="$removeText"  class="btn-sm btn-ghost btn-circle" />
-                                        <x-mary-button @click="crop('image-{{ $modelName().'.'.$key  }}-{{ $uuid }}')" @touchend.prevent="crop('image-{{ $modelName().'.'.$key }}-{{ $uuid }}')" icon="o-scissors" :tooltip="$cropText"  class="btn-sm btn-ghost btn-circle" />
+                                    <div class="{{ Mary::classes('absolute flex flex-col gap-2 top-3 start-3 cursor-pointer p-2 rounded-lg')->addRaw('ignore-drag') }}">
+                                        <x-mary-button @click="removeMedia('{{ $image['uuid'] }}', '{{ $image['url'] }}')" @touchend.prevent="removeMedia('{{ $image['uuid'] }}', '{{ $image['url'] }}')" icon="o-x-circle" :tooltip="$removeText"  class="{{ Mary::classes('btn-sm btn-ghost btn-circle') }}" />
+                                        <x-mary-button @click="crop('image-{{ $modelName().'.'.$key  }}-{{ $uuid }}')" @touchend.prevent="crop('image-{{ $modelName().'.'.$key }}-{{ $uuid }}')" icon="o-scissors" :tooltip="$cropText"  class="{{ Mary::classes('btn-sm btn-ghost btn-circle') }}" />
                                     </div>
                                 </div>
                             @endforeach
@@ -211,34 +211,34 @@ class ImageLibrary extends Component
 
                     {{-- CROP MODAL --}}
                     <div @click.prevent="" x-ref="crop" wire:ignore>
-                        <x-mary-modal id="maryCropModal{{ $uuid }}" x-ref="maryCropModal" :title="$cropTitleText" separator class="backdrop-blur-sm" persistent @keydown.window.esc.prevent="" without-trap-focus>
+                        <x-mary-modal id="maryCropModal{{ $uuid }}" x-ref="maryCropModal" :title="$cropTitleText" separator class="{{ Mary::classes('backdrop-blur-sm') }}" persistent @keydown.window.esc.prevent="" without-trap-focus>
                             <img src="#" crossOrigin="Anonymous" />
                             <x-slot:actions>
                                 <x-mary-button :label="$cropCancelText" @click="close()" />
-                                <x-mary-button :label="$cropSaveText" class="btn-primary" @click="save()" />
+                                <x-mary-button :label="$cropSaveText" class="{{ Mary::classes('btn-primary') }}" @click="save()" />
                             </x-slot:actions>
                         </x-mary-modal>
                     </div>
 
                     {{-- PROGRESS BAR  --}}
                     @if(! $hideProgress && $slot->isEmpty())
-                        <div class="-mt-2 h-1">
+                        <div class="{{ Mary::classes('-mt-2 h-1') }}">
                             <progress
                                 x-cloak
-                                :class="!processing && 'hidden'"
+                                :class="!processing && '{{ Mary::classes('hidden') }}'"
                                 :value="progress"
                                 max="100"
-                                class="progress progress-primary h-1 w-full"></progress>
+                                class="{{ Mary::classes('progress progress-primary h-1 w-full') }}"></progress>
 
                             <progress
                                 x-cloak
-                                :class="!indeterminate && 'hidden'"
-                                class="progress progress-primary h-1 w-full"></progress>
+                                :class="!indeterminate && '{{ Mary::classes('hidden') }}'"
+                                class="{{ Mary::classes('progress progress-primary h-1 w-full') }}"></progress>
                         </div>
                     @endif
 
                     {{-- ADD FILES --}}
-                    <div @click="$refs.files.click()" class="btn btn-block" :class="(processing || indeterminate) && 'opacity-50 pointer-events-none'">
+                    <div @click="$refs.files.click()" class="{{ Mary::classes('btn btn-block') }}" :class="(processing || indeterminate) && '{{ Mary::classes('opacity-50 pointer-events-none') }}'">
                         <x-mary-icon name="o-plus-circle" label="{{ $addFilesText }}" />
                     </div>
 
@@ -247,7 +247,7 @@ class ImageLibrary extends Component
                         id="{{ $uuid }}"
                         type="file"
                         x-ref="files"
-                        class="file-input file-input-border file-input-primary hidden"
+                        class="{{ Mary::classes('file-input file-input-border file-input-primary hidden') }}"
                         wire:model="{{ $modelName() }}.*"
                         accept="{{ $attributes->get('accept') ?? $mimes }}"
                         @change="progress = 1"
@@ -256,13 +256,13 @@ class ImageLibrary extends Component
                     {{-- ERROR --}}
                     @if (! $hideErrors)
                         @error($libraryName())
-                            <div class="text-error">{{ $message }}</div>
+                            <div class="{{ Mary::classes('text-error') }}">{{ $message }}</div>
                         @enderror
                     @endif
 
                     {{-- HINT --}}
                     @if($hint)
-                        <div class="fieldset-label">{{ $hint }}</div>
+                        <div class="{{ Mary::classes('fieldset-label') }}">{{ $hint }}</div>
                     @endif
                </fieldset>
             </div>

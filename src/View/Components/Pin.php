@@ -15,17 +15,17 @@ class Pin extends Component
         public ?string $id = null,
         public ?bool $numeric = false,
         public ?bool $hide = false,
-        public ?string $hideType = "disc",
+        public ?string $hideType = 'disc',
         public ?bool $noGap = false,
 
         // Validations
         public ?string $errorField = null,
-        public ?string $errorClass = 'text-error text-xs pt-2',
+        public ?string $errorClass = null,
         public ?bool $omitError = false,
         public ?bool $firstErrorOnly = false,
 
     ) {
-        $this->uuid = "mary" . md5(serialize($this)) . $id;
+        $this->uuid = 'mary' . md5(serialize($this)) . $id;
     }
 
     public function modelName(): ?string
@@ -90,7 +90,7 @@ class Pin extends Component
                         }"
                     >
                         <div
-                            @class(["flex", "join" => $noGap, "gap-3" => !$noGap])
+                            @maryClass(["flex", "join" => $noGap, "gap-3" => !$noGap])
                             id="pin{{ $uuid }}"
                         >
                             @foreach(range(0, $size - 1) as $i)
@@ -113,7 +113,7 @@ class Pin extends Component
                                         x-mask="9"
                                     @endif
                                     {{
-                                        $attributes->whereDoesntStartWith('wire')->class([
+                                        $attributes->whereDoesntStartWith('wire')->maryClass([
                                             "input input-border min-w-6 max-w-12 p-0 font-bold text-xl text-center",
                                             "join-item" => $noGap,
                                             "!input-error" => $errorFieldName() && $errors->has($errorFieldName()) && !$omitError
@@ -127,7 +127,7 @@ class Pin extends Component
                         @if(!$omitError && $errors->has($errorFieldName()))
                             @foreach($errors->get($errorFieldName()) as $message)
                                 @foreach(Arr::wrap($message) as $line)
-                                    <div class="{{ $errorClass }}" x-class="text-error">{{ $line }}</div>
+                                    <div class="{{ is_null($errorClass) ? Mary::classes('text-error text-xs pt-2') : Mary::classes()->addRaw($errorClass) }}" x-class="{{ Mary::classes('text-error') }}">{{ $line }}</div>
                                     @break($firstErrorOnly)
                                 @endforeach
                                 @break($firstErrorOnly)

@@ -8,8 +8,6 @@ use Illuminate\View\Component;
 
 class Tab extends Component
 {
-
-
     public function __construct(
         public ?string $id = null,
         public ?string $name = null,
@@ -19,9 +17,7 @@ class Tab extends Component
         public bool $hidden = false,
         public ?string $badge = null,
         public ?string $badgeClass = null,
-    ) {
-
-    }
+    ) {}
 
     public function render(): View|Closure|string
     {
@@ -32,13 +28,12 @@ class Tab extends Component
                        <div wire:key="{{ $uuid() }}-tab-{{ $name }}">
                             <template x-teleport="#{{ $uuid() }}-labels">
                                 <label
-                                    @class([
-                                        "tab flex flex-nowrap items-center gap-3 whitespace-nowrap px-4",
-                                        $labelClass,
-                                        "hidden" => $hidden,
-                                        "tab-disabled" => $disabled
-                                     ])
-                                    :class="{ 'tab-active {{ $activeClass }}': selected === '{{ $name }}' }"
+                                    class="{{ Mary::classes([
+                                        'tab flex flex-nowrap items-center gap-3 whitespace-nowrap px-4',
+                                        'hidden' => $hidden,
+                                        'tab-disabled' => $disabled,
+                                    ])->addRaw($labelClass) }}"
+                                    :class="{ '{{ Mary::classes('tab-active')->addRaw($activeClass) }}': selected === '{{ $name }}' }"
                                     @click="selected = '{{ $name }}'"
                                 >
 
@@ -49,14 +44,14 @@ class Tab extends Component
                                     {{ $label }}
 
                                     @if ($badge)
-                                        <x-mary-badge :value="$badge" @class(["badge-sm badge-soft", $badgeClass]) />
+                                        <x-mary-badge :value="$badge" class="{{ Mary::classes('badge-sm badge-soft')->addRaw($badgeClass) }}" />
                                     @endif
                                 </label>
                             </template>
                         </div>
                         <div
                             x-show="selected == '{{ $name }}'"
-                            {{ $attributes->class(["tab-content py-5 px-3 border-t-base-content/10 block rounded-none", $contentClass]) }}
+                            {{ $attributes->class(Mary::classes('tab-content py-5 px-3 border-t-base-content/10 block rounded-none')->addRaw($contentClass)) }}
                          >
                             {{ $slot }}
                         </div>

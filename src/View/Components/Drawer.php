@@ -22,10 +22,10 @@ class Drawer extends Component
         public ?bool $withoutTrapFocus = false,
         public ?bool $withoutBackdropClose = false,
 
-        //Slots
+        // Slots
         public ?string $actions = null
     ) {
-        $this->uuid = "mary" . md5(serialize($this)) . $id;
+        $this->uuid = 'mary' . md5(serialize($this)) . $id;
     }
 
     public function id(): string
@@ -66,7 +66,7 @@ class Drawer extends Component
                         x-trap="open" x-bind:inert="!open"
                     @endif
 
-                    @class(["drawer absolute z-50", "drawer-end" => $right])
+                    @maryClass(["drawer absolute z-50", "drawer-end" => $right])
 
                     {{ $attributes->whereStartsWith('@') }}
                 >
@@ -76,14 +76,14 @@ class Drawer extends Component
                         x-model="open"
                         x-ref="checkbox"
                         type="checkbox"
-                        class="drawer-toggle" />
+                        class="{{ Mary::classes('drawer-toggle') }}" />
 
-                    <div class="drawer-side" >
+                    <div class="{{ Mary::classes('drawer-side') }}" >
                         <!-- Overlay effect , click outside -->
                         @if($withoutBackdropClose)
-                            <div class="drawer-overlay pointer-events-none"></div>
+                            <div class="{{ Mary::classes('drawer-overlay pointer-events-none') }}"></div>
                         @else
-                            <label for="{{ $id() }}" class="drawer-overlay"></label>
+                            <label for="{{ $id() }}" class="{{ Mary::classes('drawer-overlay') }}"></label>
                         @endif
 
                         <!-- Content -->
@@ -92,11 +92,11 @@ class Drawer extends Component
                             :subtitle="$subtitle"
                             :separator="$separator"
                             wire:key="drawer-card"
-                            {{ $attributes->except('wire:model')->class(['min-h-screen rounded-none px-8']) }}
+                            {{ $attributes->except('wire:model')->maryClass(['min-h-screen rounded-none px-8']) }}
                         >
                             @if($withCloseButton)
                                 <x-slot:menu>
-                                    <x-mary-button icon="o-x-mark" class="btn-ghost btn-sm btn-circle" @click="close()" />
+                                    <x-mary-button icon="o-x-mark" class="{{ Mary::classes('btn-ghost btn-sm btn-circle') }}" @click="close()" />
                                 </x-slot:menu>
                             @endif
 

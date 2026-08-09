@@ -17,14 +17,14 @@ class DatePicker extends Component
         public ?string $icon = null,
         public ?string $iconRight = null,
         public ?string $hint = null,
-        public ?string $hintClass = 'fieldset-label',
+        public ?string $hintClass = null,
         public ?bool $inline = false,
         public ?bool $clearable = false,
         public ?array $config = [],
 
-	    // Popover
+        // Popover
         public ?string $popover = null,
-        public ?string $popoverIcon = "o-question-mark-circle",
+        public ?string $popoverIcon = 'o-question-mark-circle',
         public ?string $popoverTriggerClass = '',
         public ?string $popoverContentClass = '',
 
@@ -34,11 +34,11 @@ class DatePicker extends Component
 
         // Validations
         public ?string $errorField = null,
-        public ?string $errorClass = 'text-error',
+        public ?string $errorClass = null,
         public ?bool $omitError = false,
         public ?bool $firstErrorOnly = false,
     ) {
-        $this->uuid = "mary" . md5(serialize($this)) . $id;
+        $this->uuid = 'mary' . md5(serialize($this)) . $id;
     }
 
     public function modelName(): ?string
@@ -64,10 +64,10 @@ class DatePicker extends Component
     public function setup(): string
     {
         // Handle `wire:model.live` for `range` dates
-        if (isset($this->config["mode"]) && $this->config["mode"] == "range" && $this->attributes->wire('model')->hasModifier('live')) {
+        if (isset($this->config['mode']) && $this->config['mode'] == 'range' && $this->attributes->wire('model')->hasModifier('live')) {
             $this->attributes->setAttributes([
                 'wire:model' => $this->modelName(),
-                'live' => true
+                'live' => true,
             ]);
         }
 
@@ -79,13 +79,13 @@ class DatePicker extends Component
             'defaultDate' => '#model#',
             'plugins' => ['#plugins#'],
             'disable' => ['#disable#'],
-        ], Arr::except($this->config, ["plugins"])));
+        ], Arr::except($this->config, ['plugins'])));
 
         // Plugins
-        $plugins = "";
+        $plugins = '';
 
         foreach (Arr::get($this->config, 'plugins', []) as $plugin) {
-            $plugins .= "new " . key($plugin) . "( " . json_encode(current($plugin)) . " ),";
+            $plugins .= 'new ' . key($plugin) . '( ' . json_encode(current($plugin)) . ' ),';
         }
 
         $config = str_replace('"#plugins#"', $plugins, $config);
@@ -114,21 +114,21 @@ class DatePicker extends Component
                     $uuid = $uuid . $modelName()
                 @endphp
 
-                <fieldset class="fieldset py-0">
+                <fieldset class="{{ Mary::classes('fieldset py-0') }}">
                     {{-- STANDARD LABEL --}}
                     @if($label && !$inline)
-                        <legend class="fieldset-legend mb-0.5">
+                        <legend class="{{ Mary::classes('fieldset-legend mb-0.5') }}">
                             {{ $label }}
 
                             @if($attributes->get('required'))
-                                <span class="text-error">*</span>
+                                <span class="{{ Mary::classes('text-error') }}">*</span>
                             @endif
 
                             {{-- INPUT POPOVER --}}
                             @if($popover)
                                 <x-mary-popover offset="5" position="top-start">
                                     <x-slot:trigger class="{{ $popoverTriggerClass }}">
-                                        <x-mary-icon :name="$popoverIcon" class="w-4 h-4 opacity-40 mb-0.5" />
+                                        <x-mary-icon :name="$popoverIcon" class="{{ Mary::classes('w-4 h-4 opacity-40 mb-0.5') }}" />
                                     </x-slot:trigger>
                                     <x-slot:content class="{{ $popoverContentClass }}">
                                         {{ $popover }}
@@ -138,14 +138,14 @@ class DatePicker extends Component
                         </legend>
                     @endif
 
-                    <label @class(["floating-label" => $label && $inline])>
+                    <label @maryClass(["floating-label" => $label && $inline])>
                         {{-- FLOATING LABEL--}}
                         @if ($label && $inline)
-                            <span class="font-semibold">
+                            <span class="{{ Mary::classes('font-semibold') }}">
                                 {{ $label }}
 
                                 @if($attributes->get('required'))
-                                    <span class="text-error">*</span>
+                                    <span class="{{ Mary::classes('text-error') }}">*</span>
                                 @endif
                             </span>
                         @endif
@@ -206,7 +206,7 @@ class DatePicker extends Component
                                 },
                             }"
 
-                            @class(["w-full", "join" => $prepend || $append])
+                            @maryClass(["w-full", "join" => $prepend || $append])
                         >
                             {{-- PREPEND --}}
                             @if($prepend)
@@ -224,7 +224,7 @@ class DatePicker extends Component
                                 @endif
 
                                 {{
-                                    $attributes->whereStartsWith('class')->class([
+                                    $attributes->whereStartsWith('class')->maryClass([
                                         "input w-full",
                                         "join-item" => $prepend || $append,
                                         "border-dashed" => $isReadonly(),
@@ -234,11 +234,11 @@ class DatePicker extends Component
                              >
                                 {{-- ICON LEFT --}}
                                 @if($icon)
-                                    <x-mary-icon :name="$icon" class="pointer-events-none w-4 h-4 -ms-1 opacity-40" />
+                                    <x-mary-icon :name="$icon" class="{{ Mary::classes('pointer-events-none w-4 h-4 -ms-1 opacity-40') }}" />
                                 @endif
 
                                 {{-- PLACEHOLDER --}}
-                                <span :class="(focused || !isValueEmpty || !isRange || !isLive) && 'hidden'" class="text-base-content/40">
+                                <span :class="(focused || !isValueEmpty || !isRange || !isLive) && '{{ Mary::classes('hidden') }}'" class="{{ Mary::classes('text-base-content/40') }}">
                                     {{ $attributes->get('placeholder') }}
                                 </span>
 
@@ -246,19 +246,19 @@ class DatePicker extends Component
                                 <div
                                     x-init="instance = flatpickr($refs.input, {{ $setup() }});"
                                     x-on:livewire:navigating.window="instance.destroy();"
-                                    class="w-full"
+                                    class="{{ Mary::classes('w-full') }}"
                                 >
                                     <input x-ref="input" {{ $attributes->merge(['type' => 'date']) }} />
                                 </div>
 
                                 {{-- CLEAR ICON --}}
                                 @if($clearable)
-                                    <x-mary-icon @click.prevent="reset()" x-show="!isValueEmpty" name="o-x-mark" class="cursor-pointer w-4 h-4 opacity-40"/>
+                                    <x-mary-icon @click.prevent="reset()" x-show="!isValueEmpty" name="o-x-mark" class="{{ Mary::classes('cursor-pointer w-4 h-4 opacity-40') }}"/>
                                 @endif
 
                                 {{-- ICON RIGHT --}}
                                 @if($iconRight)
-                                    <x-mary-icon :name="$iconRight" class="pointer-events-none w-4 h-4 opacity-40" />
+                                    <x-mary-icon :name="$iconRight" class="{{ Mary::classes('pointer-events-none w-4 h-4 opacity-40') }}" />
                                 @endif
                             </label>
 
@@ -273,7 +273,7 @@ class DatePicker extends Component
                     @if(!$omitError && $errors->has($errorFieldName()))
                         @foreach($errors->get($errorFieldName()) as $message)
                             @foreach(Arr::wrap($message) as $line)
-                                <div class="{{ $errorClass }}" x-class="text-error">{{ $line }}</div>
+                                <div class="{{ is_null($errorClass) ? Mary::classes('text-error') : Mary::classes()->addRaw($errorClass) }}" x-class="{{ Mary::classes('text-error') }}">{{ $line }}</div>
                                 @break($firstErrorOnly)
                             @endforeach
                             @break($firstErrorOnly)
@@ -282,7 +282,7 @@ class DatePicker extends Component
 
                     {{-- HINT --}}
                     @if($hint)
-                        <div class="{{ $hintClass }}" x-classes="fieldset-label">{{ $hint }}</div>
+                        <div class="{{ is_null($hintClass) ? Mary::classes('fieldset-label') : Mary::classes()->addRaw($hintClass) }}" x-classes="{{ Mary::classes('fieldset-label') }}">{{ $hint }}</div>
                     @endif
                 </fieldset>
             </div>

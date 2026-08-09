@@ -21,11 +21,17 @@ class Calendar extends Component
         public ?array $config = [],
         public ?array $events = [],
     ) {
-        $this->uuid = "mary" . md5(serialize($this)) . $id;
+        $this->uuid = 'mary' . md5(serialize($this)) . $id;
     }
 
     public function setup(): string
     {
+        $styles = $this->config['styles'] ?? [
+            'calendar' => (string) app('mary')->classes()->addRaw('vc')->add('w-fit'),
+            'grid' => (string) app('mary')->classes()->addRaw('vc-grid')->add('justify-center'),
+            'column' => (string) app('mary')->classes()->addRaw('vc-column')->add('!min-w-fit !max-w-fit'),
+        ];
+
         $config = json_encode(array_merge([
             'type' => $this->months == 1 ? 'default' : 'multiple',
             'displayMonthsCount' => $this->months,
@@ -36,11 +42,7 @@ class Calendar extends Component
             'selectedWeekends' => $this->weekendHighlight ? [0, 6] : [],
             'selectionDatesMode' => false,
             'displayDatesOutside' => false,
-            'styles' => [
-                'calendar' => 'vc w-fit',
-                'grid' => 'vc-grid justify-center',
-                'column' => 'vc-column !min-w-fit !max-w-fit',
-            ]
+            'styles' => $styles,
         ], $this->config));
 
         return $config;
@@ -66,14 +68,14 @@ class Calendar extends Component
             }
 
             return collect($dates)->flatMap(function ($date) use ($event, &$buffer) {
-                $html = '<div><strong>' . $event['label'] . '</strong></div><div>' . ($event['description'] ?? null) . '</div><hr class="my-3 last:hidden" />';
+                $html = '<div><strong>'.$event['label'].'</strong></div><div>'.($event['description'] ?? null).'</div><hr class="'.app('mary')->classes('my-3 last:hidden').'" />';
 
-                $buffer[$date] = ($buffer[$date] ?? '') . $html;
+                $buffer[$date] = ($buffer[$date] ?? '').$html;
 
                 return [
                     $date => [
                         'modifier' => $event['css'],
-                        'html' => $buffer[$date]
+                        'html' => $buffer[$date],
                     ],
                 ];
             });

@@ -19,7 +19,7 @@ class MenuSub extends Component
         public ?bool $hidden = false,
         public ?bool $disabled = false,
     ) {
-        $this->uuid = "mary" . md5(serialize($this)) . $id;
+        $this->uuid = 'mary' . md5(serialize($this)) . $id;
     }
 
     public function render(): View|Closure|string
@@ -29,7 +29,7 @@ class MenuSub extends Component
         }
 
         return <<<'BLADE'
-                @aware(['horizontal' => false, 'activeBgColor' => 'bg-base-300'])
+                @aware(['horizontal' => false, 'activeBgColor' => null])
 
                 @php
                     $submenuActive = Str::contains($slot, 'mary-active-menu');
@@ -37,7 +37,7 @@ class MenuSub extends Component
 
                 @if ($slot->isNotEmpty())
                 <li
-                @class(['menu-disabled' => $disabled, 'static!' => $horizontal])
+                @maryClass(['menu-disabled' => $disabled, 'static!' => $horizontal])
                     x-data="
                     {
                         show: @if(($submenuActive || $open) && !$horizontal) true @else false @endif,
@@ -61,17 +61,19 @@ class MenuSub extends Component
                     >
                         <summary
                             @click.prevent="toggle()"
-                            @class(["hover:text-inherit px-4 py-1.5 my-0.5 text-inherit", $activeBgColor => $submenuActive])
+                            class="{{ Mary::classes('hover:text-inherit px-4 py-1.5 my-0.5 text-inherit')
+                                ->add($submenuActive && is_null($activeBgColor) ? 'bg-base-300' : null)
+                                ->addRaw($submenuActive ? $activeBgColor : null) }}"
                             @if($horizontal) x-ref="sub" @endif
                         >
                             @if($icon)
-                                <x-mary-icon :name="$icon" @class(['inline-flex my-0.5', $iconClasses]) />
+                                <x-mary-icon :name="$icon" class="{{ Mary::classes('inline-flex my-0.5')->addRaw($iconClasses) }}" />
                             @endif
 
-                            <span class="mary-hideable whitespace-nowrap truncate">{{ $title }}</span>
+                            <span class="{{ Mary::classes('whitespace-nowrap truncate')->addRaw('mary-hideable') }}">{{ $title }}</span>
                         </summary>
 
-                        <ul @class(["mary-hideable",  "z-10 mt-1" => $horizontal]) @if($horizontal) x-anchor.bottom-start="$refs.sub" @endif>
+                        <ul class="{{ Mary::classes(['z-10 mt-1' => $horizontal])->addRaw('mary-hideable') }}" @if($horizontal) x-anchor.bottom-start="$refs.sub" @endif>
                             {{ $slot }}
                         </ul>
                     </details>

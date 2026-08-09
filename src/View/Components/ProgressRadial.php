@@ -15,7 +15,7 @@ class ProgressRadial extends Component
         public ?float $value = 0,
         public ?string $unit = '%'
     ) {
-        $this->uuid = "mary" . md5(serialize($this)) . $id;
+        $this->uuid = 'mary' . md5(serialize($this)) . $id;
     }
 
     public function render(): View|Closure|string
@@ -24,7 +24,7 @@ class ProgressRadial extends Component
                  <div
                     {{
                         $attributes
-                            ->class("radial-progress")
+                            ->class(Mary::classes("radial-progress"))
                             ->style("--value: $value")
                     }}
 

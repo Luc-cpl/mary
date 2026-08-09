@@ -16,17 +16,17 @@ class MenuTitle extends Component
         public ?string $icon = null,
         public ?string $iconClasses = null,
     ) {
-        $this->uuid = "mary" . md5(serialize($this)) . $id;
+        $this->uuid = 'mary' . md5(serialize($this)) . $id;
     }
 
     public function render(): View|Closure|string
     {
         return <<<'BLADE'
-                <li {{ $attributes->class(["menu-title"]) }}>
-                    <div class="flex items-center gap-2">
+                <li {{ $attributes->maryClass(["menu-title"]) }}>
+                    <div class="{{ Mary::classes('flex items-center gap-2') }}">
 
                         @if($icon)
-                            <x-mary-icon :name="$icon" @class([$iconClasses]) />
+                            <x-mary-icon :name="$icon" class="{{ Mary::classes()->addRaw($iconClasses) }}" />
                         @endif
 
                         {{ $title }}

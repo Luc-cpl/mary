@@ -15,18 +15,18 @@ class Group extends Component
         public ?string $id = null,
         public ?string $label = null,
         public ?string $hint = null,
-        public ?string $hintClass = 'fieldset-label',
+        public ?string $hintClass = null,
         public ?string $optionValue = 'id',
         public ?string $optionLabel = 'name',
         public Collection|array $options = new Collection(),
 
         // Validations
         public ?string $errorField = null,
-        public ?string $errorClass = 'text-error',
+        public ?string $errorClass = null,
         public ?bool $omitError = false,
         public ?bool $firstErrorOnly = false,
     ) {
-        $this->uuid = "mary" . md5(serialize($this)) . $id;
+        $this->uuid = 'mary' . md5(serialize($this)) . $id;
     }
 
     public function modelName(): ?string
@@ -43,19 +43,19 @@ class Group extends Component
     {
         return <<<'BLADE'
                 <div>
-                    <fieldset class="fieldset py-0">
+                    <fieldset class="{{ Mary::classes('fieldset py-0') }}">
                         {{-- STANDARD LABEL --}}
                         @if($label)
-                            <legend class="fieldset-legend mb-0.5">
+                            <legend class="{{ Mary::classes('fieldset-legend mb-0.5') }}">
                                 {{ $label }}
 
                                 @if($attributes->get('required'))
-                                    <span class="text-error">*</span>
+                                    <span class="{{ Mary::classes('text-error') }}">*</span>
                                 @endif
                             </legend>
                         @endif
 
-                        <div class="join">
+                        <div class="{{ Mary::classes('join') }}">
                             @foreach ($options as $option)
                                 <input
                                     type="radio"
@@ -66,7 +66,7 @@ class Group extends Component
 
                                     {{ $attributes->whereStartsWith('wire:model') }}
                                     {{
-                                        $attributes->class([
+                                        $attributes->maryClass([
                                             "join-item btn [&:checked]:btn-neutral",
                                             "!border-l-base-100" => data_get($option, 'disabled')
                                         ])
@@ -79,7 +79,7 @@ class Group extends Component
                         @if(!$omitError && $errors->has($errorFieldName()))
                             @foreach($errors->get($errorFieldName()) as $message)
                                 @foreach(Arr::wrap($message) as $line)
-                                    <div class="{{ $errorClass }}" x-class="text-error">{{ $line }}</div>
+                                    <div class="{{ is_null($errorClass) ? Mary::classes('text-error') : Mary::classes()->addRaw($errorClass) }}" x-class="{{ Mary::classes('text-error') }}">{{ $line }}</div>
                                     @break($firstErrorOnly)
                                 @endforeach
                                 @break($firstErrorOnly)
@@ -88,7 +88,7 @@ class Group extends Component
 
                         {{-- HINT --}}
                         @if($hint)
-                            <div class="{{ $hintClass }}" x-classes="fieldset-label">{{ $hint }}</div>
+                            <div class="{{ is_null($hintClass) ? Mary::classes('fieldset-label') : Mary::classes()->addRaw($hintClass) }}" x-classes="{{ Mary::classes('fieldset-label') }}">{{ $hint }}</div>
                         @endif
                     </fieldset>
                 </div>

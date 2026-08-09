@@ -15,17 +15,17 @@ class Signature extends Component
         public ?string $height = '250',
         public ?string $clearText = 'Clear',
         public ?string $hint = null,
-        public ?string $hintClass = 'fieldset-label text-xs pt-1',
+        public ?string $hintClass = null,
         public ?array $config = [],
         public ?string $clearBtnStyle = null,
 
         // Validations
-        public ?string $errorClass = 'text-error text-xs pt-1',
+        public ?string $errorClass = null,
         public ?string $errorField = null,
         public ?bool $omitError = false,
         public ?bool $firstErrorOnly = false,
     ) {
-        $this->uuid = "mary" . md5(serialize($this)) . $id;
+        $this->uuid = 'mary' . md5(serialize($this)) . $id;
     }
 
     public function modelName(): ?string
@@ -75,23 +75,23 @@ class Signature extends Component
                          }"
 
                          wire:ignore
-                         class="select-none touch-none block"
+                         class="{{ Mary::classes('select-none touch-none block') }}"
                     >
                         <div
                             {{
                                 $attributes
                                     ->except("wire:model")
-                                    ->class([
+                                    ->maryClass([
                                         "border-[length:var(--border)] border-base-300 rounded-lg relative bg-white select-none touch-none block",
                                         "!border-error" => $errors->has($modelName())
                                     ])
                             }}
                         }>
-                            <canvas id="{{ $uuid }}signature" height="{{ $height }}" class="rounded-lg block w-full select-none touch-none"></canvas>
+                            <canvas id="{{ $uuid }}signature" height="{{ $height }}" class="{{ Mary::classes('rounded-lg block w-full select-none touch-none') }}"></canvas>
 
                             <!-- CLEAR BUTTON -->
-                            <div class="absolute end-2 top-1/2 -translate-y-1/2 ">
-                                <x-mary-button icon="o-backspace" :label="$clearText" @click="clear" class="{{$clearBtnStyle ?? 'btn-sm btn-ghost'}}" />
+                            <div class="{{ Mary::classes('absolute end-2 top-1/2 -translate-y-1/2 ') }}">
+                                <x-mary-button icon="o-backspace" :label="$clearText" @click="clear" class="{{ is_null($clearBtnStyle) ? Mary::classes('btn-sm btn-ghost') : Mary::classes()->addRaw($clearBtnStyle) }}" />
                             </div>
                         </div>
                     </div>
@@ -100,7 +100,7 @@ class Signature extends Component
                     @if(!$omitError && $errors->has($errorFieldName()))
                         @foreach($errors->get($errorFieldName()) as $message)
                             @foreach(Arr::wrap($message) as $line)
-                                <div class="{{ $errorClass }}" x-classes="text-error text-xs pt-1">{{ $line }}</div>
+                                <div class="{{ is_null($errorClass) ? Mary::classes('text-error text-xs pt-1') : Mary::classes()->addRaw($errorClass) }}" x-classes="{{ Mary::classes('text-error text-xs pt-1') }}">{{ $line }}</div>
                                 @break($firstErrorOnly)
                             @endforeach
                             @break($firstErrorOnly)
@@ -109,7 +109,7 @@ class Signature extends Component
 
                     <!-- HINT -->
                     @if($hint)
-                        <div class="{{ $hintClass }}" x-classes="fieldset-label text-xs pt-1">{{ $hint }}</div>
+                        <div class="{{ is_null($hintClass) ? Mary::classes('fieldset-label text-xs pt-1') : Mary::classes()->addRaw($hintClass) }}" x-classes="{{ Mary::classes('fieldset-label text-xs pt-1') }}">{{ $hint }}</div>
                     @endif
                 </div>
             HTML;
