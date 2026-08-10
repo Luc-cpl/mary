@@ -1,0 +1,1074 @@
+{
+    "accordion": {
+        "unprefixed": [
+            "class=join join-vertical w-full"
+        ],
+        "prefixed": [
+            "class=tw:join tw:join-vertical tw:w-full"
+        ]
+    },
+    "alert": {
+        "unprefixed": [
+            "class=",
+            "class=alert rounded-md",
+            "class=flex items-center gap-3",
+            "class=text-xs"
+        ],
+        "prefixed": [
+            "class=",
+            "class=tw:alert tw:rounded-md",
+            "class=tw:flex tw:items-center tw:gap-3",
+            "class=tw:text-xs"
+        ]
+    },
+    "avatar": {
+        "unprefixed": [
+            "class=avatar avatar-placeholder",
+            "class=flex items-center gap-3",
+            "class=text-xs",
+            "class=w-7 rounded-full bg-neutral text-neutral-content"
+        ],
+        "prefixed": [
+            "class=tw:avatar tw:avatar-placeholder",
+            "class=tw:flex tw:items-center tw:gap-3",
+            "class=tw:text-xs",
+            "class=tw:w-7 tw:rounded-full tw:bg-neutral tw:text-neutral-content"
+        ]
+    },
+    "badge": {
+        "unprefixed": [
+            "class=badge"
+        ],
+        "prefixed": [
+            "class=tw:badge"
+        ]
+    },
+    "breadcrumbs": {
+        "unprefixed": [
+            "class=flex items-center"
+        ],
+        "prefixed": [
+            "class=tw:flex tw:items-center"
+        ]
+    },
+    "button": {
+        "unprefixed": [
+            "class=btn"
+        ],
+        "prefixed": [
+            "class=tw:btn"
+        ]
+    },
+    "card": {
+        "unprefixed": [
+            "class=card bg-base-100 p-5",
+            "class=grow-1 null"
+        ],
+        "prefixed": [
+            "class=tw:card tw:bg-base-100 tw:p-5",
+            "class=tw:grow-1 null"
+        ]
+    },
+    "carousel": {
+        "unprefixed": [
+            ":class=[currentSlideIndex === index + 1 ? 'bg-base-content' : 'bg-base-content\/30']",
+            "class=absolute rounded-xl bottom-3 md:bottom-5 left-1\/2 z-[2] flex -translate-x-1\/2 gap-4 md:gap-5 bg-base-300 px-1.5 py-1 md:px-2",
+            "class=block",
+            "class=block",
+            "class=btn absolute cursor-pointer left-5 top-1\/2 z-[2] btn-circle btn-sm",
+            "class=btn absolute cursor-pointer right-5 top-1\/2 z-[2] btn-circle btn-sm",
+            "class=inline flex-shrink-0 w-5 h-5",
+            "class=inline flex-shrink-0 w-5 h-5",
+            "class=relative h-64 w-full rounded-box overflow-hidden",
+            "class=relative w-full overflow-hidden",
+            "class=size-2.5 cursor-pointer rounded-full transition hover:scale-125"
+        ],
+        "prefixed": [
+            ":class=[currentSlideIndex === index + 1 ? 'tw:bg-base-content' : 'tw:bg-base-content\/30']",
+            "class=tw:absolute tw:rounded-xl tw:bottom-3 tw:md:bottom-5 tw:left-1\/2 tw:z-[2] tw:flex tw:-translate-x-1\/2 tw:gap-4 tw:md:gap-5 tw:bg-base-300 tw:px-1.5 tw:py-1 tw:md:px-2",
+            "class=tw:block",
+            "class=tw:block",
+            "class=tw:btn tw:absolute tw:cursor-pointer tw:left-5 tw:top-1\/2 tw:z-[2] tw:btn-circle tw:btn-sm",
+            "class=tw:btn tw:absolute tw:cursor-pointer tw:right-5 tw:top-1\/2 tw:z-[2] tw:btn-circle tw:btn-sm",
+            "class=tw:inline tw:flex-shrink-0 tw:w-5 tw:h-5",
+            "class=tw:inline tw:flex-shrink-0 tw:w-5 tw:h-5",
+            "class=tw:relative tw:h-64 tw:w-full tw:rounded-box tw:overflow-hidden",
+            "class=tw:relative tw:w-full tw:overflow-hidden",
+            "class=tw:size-2.5 tw:cursor-pointer tw:rounded-full tw:transition tw:hover:scale-125"
+        ]
+    },
+    "chart": {
+        "unprefixed": [
+            "class=relative"
+        ],
+        "prefixed": [
+            "class=tw:relative"
+        ]
+    },
+    "checkbox": {
+        "unprefixed": [
+            "class=",
+            "class=checkbox",
+            "class=fieldset",
+            "class=flex gap-3 items-center cursor-pointer",
+            "class=text-sm font-medium",
+            "class=w-full"
+        ],
+        "prefixed": [
+            "class=",
+            "class=tw:checkbox",
+            "class=tw:fieldset",
+            "class=tw:flex tw:gap-3 tw:items-center tw:cursor-pointer",
+            "class=tw:text-sm tw:font-medium",
+            "class=tw:w-full"
+        ]
+    },
+    "choices": {
+        "unprefixed": [
+            ":class=(focused || !isSelectionEmpty) && 'hidden'",
+            "class=",
+            "class=cursor-pointer badge badge-soft m-0.5 !inline-block !h-auto mary-choices-element",
+            "class=fieldset py-0",
+            "class=inline flex-shrink-0 w-4 h-4 hover:text-error",
+            "class=p-3 decoration-wavy decoration-warning underline font-bold border border-s-4 border-s-warning border-b-base-200",
+            "class=progress absolute top-0 h-0.5",
+            "class=relative",
+            "class=select w-full min-h-[var(--size)] h-auto ps-2.5",
+            "class=text-base-content\/40",
+            "class=w-1 !inline-block outline-hidden",
+            "class=w-full",
+            "class=w-full absolute z-10 shadow-xl bg-base-100 border border-base-content\/10 rounded-lg cursor-pointer overflow-y-auto max-h-64",
+            "class=w-full py-0.5 min-h-3 content-center text-wrap"
+        ],
+        "prefixed": [
+            ":class=(focused || !isSelectionEmpty) && 'tw:hidden'",
+            "class=",
+            "class=tw:cursor-pointer tw:badge tw:badge-soft tw:m-0.5 tw:!inline-block tw:!h-auto mary-choices-element",
+            "class=tw:fieldset tw:py-0",
+            "class=tw:inline tw:flex-shrink-0 tw:w-4 tw:h-4 tw:hover:text-error",
+            "class=tw:p-3 tw:decoration-wavy tw:decoration-warning tw:underline tw:font-bold tw:border tw:border-s-4 tw:border-s-warning tw:border-b-base-200",
+            "class=tw:progress tw:absolute tw:top-0 tw:h-0.5",
+            "class=tw:relative",
+            "class=tw:select tw:w-full tw:min-h-[var(--size)] tw:h-auto tw:ps-2.5",
+            "class=tw:text-base-content\/40",
+            "class=tw:w-1 tw:!inline-block tw:outline-hidden",
+            "class=tw:w-full",
+            "class=tw:w-full tw:absolute tw:z-10 tw:shadow-xl tw:bg-base-100 tw:border tw:border-base-content\/10 tw:rounded-lg tw:cursor-pointer tw:overflow-y-auto tw:max-h-64",
+            "class=tw:w-full tw:py-0.5 tw:min-h-3 tw:content-center tw:text-wrap"
+        ]
+    },
+    "choices-offline": {
+        "unprefixed": [
+            ":class=(focused || !isSelectionEmpty) && 'hidden'",
+            "class=",
+            "class=cursor-pointer badge badge-soft m-0.5 !inline-block !h-auto mary-choices-element",
+            "class=fieldset py-0",
+            "class=inline flex-shrink-0 w-4 h-4 hover:text-error",
+            "class=p-3 decoration-wavy decoration-warning underline font-bold border border-s-4 border-s-warning border-b-base-200",
+            "class=relative",
+            "class=select w-full min-h-[var(--size)] h-auto ps-2.5",
+            "class=text-base-content\/40",
+            "class=w-1 !inline-block outline-hidden",
+            "class=w-full",
+            "class=w-full absolute z-10 shadow-xl bg-base-100 border border-base-content\/10 rounded-lg cursor-pointer overflow-y-auto max-h-64",
+            "class=w-full py-0.5 min-h-3 content-center text-wrap",
+            "classList.add=hidden",
+            "classList.remove=hidden"
+        ],
+        "prefixed": [
+            ":class=(focused || !isSelectionEmpty) && 'tw:hidden'",
+            "class=",
+            "class=tw:cursor-pointer tw:badge tw:badge-soft tw:m-0.5 tw:!inline-block tw:!h-auto mary-choices-element",
+            "class=tw:fieldset tw:py-0",
+            "class=tw:inline tw:flex-shrink-0 tw:w-4 tw:h-4 tw:hover:text-error",
+            "class=tw:p-3 tw:decoration-wavy tw:decoration-warning tw:underline tw:font-bold tw:border tw:border-s-4 tw:border-s-warning tw:border-b-base-200",
+            "class=tw:relative",
+            "class=tw:select tw:w-full tw:min-h-[var(--size)] tw:h-auto tw:ps-2.5",
+            "class=tw:text-base-content\/40",
+            "class=tw:w-1 tw:!inline-block tw:outline-hidden",
+            "class=tw:w-full",
+            "class=tw:w-full tw:absolute tw:z-10 tw:shadow-xl tw:bg-base-100 tw:border tw:border-base-content\/10 tw:rounded-lg tw:cursor-pointer tw:overflow-y-auto tw:max-h-64",
+            "class=tw:w-full tw:py-0.5 tw:min-h-3 tw:content-center tw:text-wrap",
+            "classList.add=tw:hidden",
+            "classList.remove=tw:hidden"
+        ]
+    },
+    "code": {
+        "unprefixed": [
+            "class=textarea w-full p-0"
+        ],
+        "prefixed": [
+            "class=tw:textarea tw:w-full tw:p-0"
+        ]
+    },
+    "collapse": {
+        "unprefixed": [
+            "class=collapse border-[length:var(--border)] border-base-content\/10 join-item collapse-arrow",
+            "class=collapse-content",
+            "class=collapse-title font-semibold"
+        ],
+        "prefixed": [
+            "class=tw:collapse tw:border-[length:var(--border)] tw:border-base-content\/10 tw:join-item tw:collapse-arrow",
+            "class=tw:collapse-content",
+            "class=tw:collapse-title tw:font-semibold"
+        ]
+    },
+    "colorpicker": {
+        "unprefixed": [
+            ":class=!$wire.color && 'bg-[repeating-linear-gradient(45deg,_#ddd_0px,_#ddd_1px,_transparent_1px,_transparent_5px)]'",
+            "class=",
+            "class=",
+            "class=cursor-pointer opacity-0 join-item",
+            "class=fieldset py-0",
+            "class=input join-item w-12 p-0",
+            "class=input join-item w-full",
+            "class=w-full join"
+        ],
+        "prefixed": [
+            ":class=!$wire.color && 'tw:bg-[repeating-linear-gradient(45deg,_#ddd_0px,_#ddd_1px,_transparent_1px,_transparent_5px)]'",
+            "class=",
+            "class=",
+            "class=tw:cursor-pointer tw:opacity-0 tw:join-item",
+            "class=tw:fieldset tw:py-0",
+            "class=tw:input tw:join-item tw:w-12 tw:p-0",
+            "class=tw:input tw:join-item tw:w-full",
+            "class=tw:w-full tw:join"
+        ]
+    },
+    "datepicker": {
+        "unprefixed": [
+            ":class=(focused || !isValueEmpty || !isRange || !isLive) && 'hidden'",
+            "class=",
+            "class=fieldset py-0",
+            "class=input w-full",
+            "class=text-base-content\/40",
+            "class=w-full",
+            "class=w-full"
+        ],
+        "prefixed": [
+            ":class=(focused || !isValueEmpty || !isRange || !isLive) && 'tw:hidden'",
+            "class=",
+            "class=tw:fieldset tw:py-0",
+            "class=tw:input tw:w-full",
+            "class=tw:text-base-content\/40",
+            "class=tw:w-full",
+            "class=tw:w-full"
+        ]
+    },
+    "datetime": {
+        "unprefixed": [
+            "class=",
+            "class=!grid",
+            "class=fieldset py-0",
+            "class=input w-full",
+            "class=w-full"
+        ],
+        "prefixed": [
+            "class=",
+            "class=tw:!grid",
+            "class=tw:fieldset tw:py-0",
+            "class=tw:input tw:w-full",
+            "class=tw:w-full"
+        ]
+    },
+    "diff": {
+        "unprefixed": [
+            "class=[&_.d2h-diff-table]:!text-xs [&_.d2h-file-header]:!bg-base-100 [&_.d2h-file-wrapper]:!border-dashed [&_.d2h-file-wrapper]:!border-[length:var(--border)] [&_.d2h-file-wrapper]:!bg-base-100 [&_.d2h-del]:!bg-red-50 [&_.d2h-ins]:!bg-green-50 [&_.d2h-code-line-ctn]:!whitespace-pre-wrap [&_.d2h-code-side-line]:!w-auto"
+        ],
+        "prefixed": [
+            "class=tw:[&_.d2h-diff-table]:!text-xs tw:[&_.d2h-file-header]:!bg-base-100 tw:[&_.d2h-file-wrapper]:!border-dashed tw:[&_.d2h-file-wrapper]:!border-[length:var(--border)] tw:[&_.d2h-file-wrapper]:!bg-base-100 tw:[&_.d2h-del]:!bg-red-50 tw:[&_.d2h-ins]:!bg-green-50 tw:[&_.d2h-code-line-ctn]:!whitespace-pre-wrap tw:[&_.d2h-code-side-line]:!w-auto"
+        ]
+    },
+    "drawer": {
+        "unprefixed": [
+            "class=card bg-base-100 p-5 min-h-screen rounded-none px-8",
+            "class=drawer absolute z-50",
+            "class=drawer-overlay",
+            "class=drawer-side",
+            "class=drawer-toggle",
+            "class=grow-1 null"
+        ],
+        "prefixed": [
+            "class=tw:card tw:bg-base-100 tw:p-5 tw:min-h-screen tw:rounded-none tw:px-8",
+            "class=tw:drawer tw:absolute tw:z-50",
+            "class=tw:drawer-overlay",
+            "class=tw:drawer-side",
+            "class=tw:drawer-toggle",
+            "class=tw:grow-1 null"
+        ]
+    },
+    "dropdown": {
+        "unprefixed": [
+            "class=btn",
+            "class=inline flex-shrink-0 w-5 h-5",
+            "class=overflow-visible dropdown",
+            "class=p-2 shadow menu z-[1] border-[length:var(--border)] border-base-content\/10 bg-base-100 rounded-box w-auto min-w-max"
+        ],
+        "prefixed": [
+            "class=tw:btn",
+            "class=tw:inline tw:flex-shrink-0 tw:w-5 tw:h-5",
+            "class=tw:overflow-visible tw:dropdown",
+            "class=tw:p-2 tw:shadow tw:menu tw:z-[1] tw:border-[length:var(--border)] tw:border-base-content\/10 tw:bg-base-100 tw:rounded-box tw:w-auto tw:min-w-max"
+        ]
+    },
+    "editor": {
+        "unprefixed": [
+            "class=fieldset py-0"
+        ],
+        "prefixed": [
+            "class=tw:fieldset tw:py-0"
+        ]
+    },
+    "errors": {
+        "unprefixed": [
+            "class=alert alert-error rounded rounded-sm",
+            "class=flex gap-2",
+            "class=grid gap-3",
+            "class=list-disc ms-5 space-y-2 sm:ms-12 pb-3"
+        ],
+        "prefixed": [
+            "class=tw:alert tw:alert-error tw:rounded tw:rounded-sm",
+            "class=tw:flex tw:gap-2",
+            "class=tw:grid tw:gap-3",
+            "class=tw:list-disc tw:ms-5 tw:space-y-2 tw:sm:ms-12 tw:pb-3"
+        ]
+    },
+    "file": {
+        "unprefixed": [
+            ":class=!processing && 'hidden'",
+            "class=fieldset py-0",
+            "class=file-input w-full",
+            "class=progress h-1 absolute -mt-2 w-56"
+        ],
+        "prefixed": [
+            ":class=!processing && 'tw:hidden'",
+            "class=tw:fieldset tw:py-0",
+            "class=tw:file-input tw:w-full",
+            "class=tw:progress tw:h-1 tw:absolute tw:-mt-2 tw:w-56"
+        ]
+    },
+    "form": {
+        "unprefixed": [
+            "class=grid grid-flow-row auto-rows-min gap-3"
+        ],
+        "prefixed": [
+            "class=tw:grid tw:grid-flow-row tw:auto-rows-min tw:gap-3"
+        ]
+    },
+    "group": {
+        "unprefixed": [
+            "class=fieldset py-0",
+            "class=join"
+        ],
+        "prefixed": [
+            "class=tw:fieldset tw:py-0",
+            "class=tw:join"
+        ]
+    },
+    "header": {
+        "unprefixed": [
+            "class=",
+            "class=flex flex-wrap gap-5 justify-between items-center",
+            "class=flex items-center text-2xl font-extrabold",
+            "class=mb-10"
+        ],
+        "prefixed": [
+            "class=",
+            "class=tw:flex tw:flex-wrap tw:gap-5 tw:justify-between tw:items-center",
+            "class=tw:flex tw:items-center tw:text-2xl tw:font-extrabold",
+            "class=tw:mb-10"
+        ]
+    },
+    "hr": {
+        "unprefixed": [
+            "class=h-[2px] border-t-[length:var(--border)] border-t-base-content\/10 my-5",
+            "class=progress progress-primary hidden h-[1px]",
+            "wire:loading.class=!h-[length:var(--border)] !block"
+        ],
+        "prefixed": [
+            "class=tw:h-[2px] tw:border-t-[length:var(--border)] tw:border-t-base-content\/10 tw:my-5",
+            "class=tw:progress tw:progress-primary tw:hidden tw:h-[1px]",
+            "wire:loading.class=tw:!h-[length:var(--border)] tw:!block"
+        ]
+    },
+    "icon": {
+        "unprefixed": [
+            "class=inline flex-shrink-0 w-5 h-5"
+        ],
+        "prefixed": [
+            "class=tw:inline tw:flex-shrink-0 tw:w-5 tw:h-5"
+        ]
+    },
+    "image-gallery": {
+        "unprefixed": [
+            "class=carousel pswp-gallery pswp-gallery--single-column"
+        ],
+        "prefixed": [
+            "class=tw:carousel pswp-gallery pswp-gallery--single-column"
+        ]
+    },
+    "image-library": {
+        "unprefixed": [
+            ":class=!indeterminate && 'hidden'",
+            ":class=!processing && 'hidden'",
+            ":class=(processing || indeterminate) && 'opacity-50 pointer-events-none'",
+            ":class=(processing || indeterminate) && 'opacity-50 pointer-events-none'",
+            "class=",
+            "class=",
+            "class=",
+            "class=",
+            "class=-mt-2 h-1",
+            "class=border-[length:var(--border)] border-base-content\/10 border-dotted rounded-lg",
+            "class=border-t-[length:var(--border)] border-base-content\/10 mt-3",
+            "class=border-t-[length:var(--border)] border-base-content\/10 mt-5",
+            "class=btn",
+            "class=btn btn-block",
+            "class=btn btn-primary",
+            "class=fieldset py-0",
+            "class=file-input file-input-border file-input-primary hidden",
+            "class=flex flex-wrap gap-5 justify-between items-center",
+            "class=flex items-center font-extrabold text-xl",
+            "class=inline flex-shrink-0 w-5 h-5",
+            "class=inline-flex items-center gap-1",
+            "class=mb-10 !mb-5",
+            "class=modal backdrop-blur-sm",
+            "class=modal-action",
+            "class=modal-box",
+            "class=progress progress-primary h-1 w-full",
+            "class=progress progress-primary h-1 w-full",
+            "class=relative hidden"
+        ],
+        "prefixed": [
+            ":class=!indeterminate && 'tw:hidden'",
+            ":class=!processing && 'tw:hidden'",
+            ":class=(processing || indeterminate) && 'tw:opacity-50 tw:pointer-events-none'",
+            ":class=(processing || indeterminate) && 'tw:opacity-50 tw:pointer-events-none'",
+            "class=",
+            "class=",
+            "class=",
+            "class=",
+            "class=tw:-mt-2 tw:h-1",
+            "class=tw:border-[length:var(--border)] tw:border-base-content\/10 tw:border-dotted tw:rounded-lg",
+            "class=tw:border-t-[length:var(--border)] tw:border-base-content\/10 tw:mt-3",
+            "class=tw:border-t-[length:var(--border)] tw:border-base-content\/10 tw:mt-5",
+            "class=tw:btn",
+            "class=tw:btn tw:btn-block",
+            "class=tw:btn tw:btn-primary",
+            "class=tw:fieldset tw:py-0",
+            "class=tw:file-input tw:file-input-border tw:file-input-primary tw:hidden",
+            "class=tw:flex tw:flex-wrap tw:gap-5 tw:justify-between tw:items-center",
+            "class=tw:flex tw:items-center tw:font-extrabold tw:text-xl",
+            "class=tw:inline tw:flex-shrink-0 tw:w-5 tw:h-5",
+            "class=tw:inline-flex tw:items-center tw:gap-1",
+            "class=tw:mb-10 tw:!mb-5",
+            "class=tw:modal tw:backdrop-blur-sm",
+            "class=tw:modal-action",
+            "class=tw:modal-box",
+            "class=tw:progress tw:progress-primary tw:h-1 tw:w-full",
+            "class=tw:progress tw:progress-primary tw:h-1 tw:w-full",
+            "class=tw:relative tw:hidden"
+        ]
+    },
+    "input": {
+        "unprefixed": [
+            "class=",
+            "class=fieldset py-0",
+            "class=input w-full",
+            "class=w-full"
+        ],
+        "prefixed": [
+            "class=",
+            "class=tw:fieldset tw:py-0",
+            "class=tw:input tw:w-full",
+            "class=tw:w-full"
+        ]
+    },
+    "kbd": {
+        "unprefixed": [
+            "class=kbd"
+        ],
+        "prefixed": [
+            "class=tw:kbd"
+        ]
+    },
+    "list-item": {
+        "unprefixed": [
+            "class=border-t-[length:var(--border)] border-base-content\/10",
+            "class=flex justify-start items-center gap-4 px-3 py-3 hover:bg-base-200",
+            "class=flex-1 overflow-hidden whitespace-nowrap text-ellipsis truncate mary-hideable",
+            "class=font-semibold truncate",
+            "class=text-base-content\/50 text-sm truncate"
+        ],
+        "prefixed": [
+            "class=tw:border-t-[length:var(--border)] tw:border-base-content\/10",
+            "class=tw:flex tw:justify-start tw:items-center tw:gap-4 tw:px-3 tw:py-3 tw:hover:bg-base-200",
+            "class=tw:flex-1 tw:overflow-hidden tw:whitespace-nowrap tw:text-ellipsis tw:truncate mary-hideable",
+            "class=tw:font-semibold tw:truncate",
+            "class=tw:text-base-content\/50 tw:text-sm tw:truncate"
+        ]
+    },
+    "loading": {
+        "unprefixed": [
+            "class=loading"
+        ],
+        "prefixed": [
+            "class=tw:loading"
+        ]
+    },
+    "main": {
+        "unprefixed": [
+            "class=drawer lg:drawer-open",
+            "class=drawer-content w-full mx-auto p-5 lg:px-10 lg:py-5",
+            "class=drawer-toggle",
+            "class=w-full mx-auto max-w-screen-2xl"
+        ],
+        "prefixed": [
+            "class=tw:drawer tw:lg:drawer-open",
+            "class=tw:drawer-content tw:w-full tw:mx-auto tw:p-5 tw:lg:px-10 tw:lg:py-5",
+            "class=tw:drawer-toggle",
+            "class=tw:w-full tw:mx-auto tw:max-w-screen-2xl"
+        ]
+    },
+    "markdown": {
+        "unprefixed": [
+            ":class=uploading && '!block'",
+            ":class=uploading && 'pointer-events-none opacity-50'",
+            "class=absolute top-1\/2 start-1\/2 !opacity-100 text-center hidden",
+            "class=fieldset py-0",
+            "class=loading loading-dots",
+            "class=relative text-base disabled"
+        ],
+        "prefixed": [
+            ":class=uploading && 'tw:!block'",
+            ":class=uploading && 'tw:pointer-events-none tw:opacity-50'",
+            "class=tw:absolute tw:top-1\/2 tw:start-1\/2 tw:!opacity-100 tw:text-center tw:hidden",
+            "class=tw:fieldset tw:py-0",
+            "class=tw:loading tw:loading-dots",
+            "class=tw:relative tw:text-base disabled"
+        ]
+    },
+    "menu": {
+        "unprefixed": [
+            "class=menu w-full"
+        ],
+        "prefixed": [
+            "class=tw:menu tw:w-full"
+        ]
+    },
+    "menu-item": {
+        "unprefixed": [
+            "class=",
+            "class=my-0.5 py-1.5 px-4 hover:text-inherit whitespace-nowrap",
+            "class=whitespace-nowrap truncate mary-hideable"
+        ],
+        "prefixed": [
+            "class=",
+            "class=tw:my-0.5 tw:py-1.5 tw:px-4 tw:hover:text-inherit tw:whitespace-nowrap",
+            "class=tw:whitespace-nowrap tw:truncate mary-hideable"
+        ]
+    },
+    "menu-separator": {
+        "unprefixed": [
+            "class=my-3 border-t-[length:var(--border)] border-base-content\/10"
+        ],
+        "prefixed": [
+            "class=tw:my-3 tw:border-t-[length:var(--border)] tw:border-base-content\/10"
+        ]
+    },
+    "menu-sub": {
+        "unprefixed": [
+            "class=",
+            "class=",
+            "class=hover:text-inherit px-4 py-1.5 my-0.5 text-inherit",
+            "class=mary-hideable",
+            "class=my-0.5 py-1.5 px-4 hover:text-inherit whitespace-nowrap",
+            "class=whitespace-nowrap truncate mary-hideable",
+            "class=whitespace-nowrap truncate mary-hideable"
+        ],
+        "prefixed": [
+            "class=",
+            "class=",
+            "class=mary-hideable",
+            "class=tw:hover:text-inherit tw:px-4 tw:py-1.5 tw:my-0.5 tw:text-inherit",
+            "class=tw:my-0.5 tw:py-1.5 tw:px-4 tw:hover:text-inherit tw:whitespace-nowrap",
+            "class=tw:whitespace-nowrap tw:truncate mary-hideable",
+            "class=tw:whitespace-nowrap tw:truncate mary-hideable"
+        ]
+    },
+    "menu-title": {
+        "unprefixed": [
+            "class=flex items-center gap-2",
+            "class=menu-title"
+        ],
+        "prefixed": [
+            "class=tw:flex tw:items-center tw:gap-2",
+            "class=tw:menu-title"
+        ]
+    },
+    "modal": {
+        "unprefixed": [
+            ":class={'modal-open !animate-none': open}",
+            "class=block",
+            "class=btn btn-circle btn-sm btn-ghost absolute end-2 top-2 z-[999]",
+            "class=inline flex-shrink-0 w-5 h-5",
+            "class=modal",
+            "class=modal-backdrop",
+            "class=modal-box"
+        ],
+        "prefixed": [
+            ":class={'tw:modal-open tw:!animate-none': open}",
+            "class=tw:block",
+            "class=tw:btn tw:btn-circle tw:btn-sm tw:btn-ghost tw:absolute tw:end-2 tw:top-2 tw:z-[999]",
+            "class=tw:inline tw:flex-shrink-0 tw:w-5 tw:h-5",
+            "class=tw:modal",
+            "class=tw:modal-backdrop",
+            "class=tw:modal-box"
+        ]
+    },
+    "nav": {
+        "unprefixed": [
+            "class=bg-base-100 border-base-content\/10 border-b-[length:var(--border)]",
+            "class=flex items-center px-6 py-3 max-w-screen-2xl mx-auto"
+        ],
+        "prefixed": [
+            "class=tw:bg-base-100 tw:border-base-content\/10 tw:border-b-[length:var(--border)]",
+            "class=tw:flex tw:items-center tw:px-6 tw:py-3 tw:max-w-screen-2xl tw:mx-auto"
+        ]
+    },
+    "pagination": {
+        "unprefixed": [
+            "class=justify-between md:flex md:flex-row w-auto md:w-full items-center overflow-y-auto ps-2 pe-2 relative",
+            "class=mary-table-pagination",
+            "class=mb-4 border-t-[length:var(--border)] border-t-base-content\/5",
+            "class=w-full"
+        ],
+        "prefixed": [
+            "class=mary-table-pagination",
+            "class=tw:justify-between tw:md:flex tw:md:flex-row tw:w-auto tw:md:w-full tw:items-center tw:overflow-y-auto tw:ps-2 tw:pe-2 tw:relative",
+            "class=tw:mb-4 tw:border-t-[length:var(--border)] tw:border-t-base-content\/5",
+            "class=tw:w-full"
+        ]
+    },
+    "password": {
+        "unprefixed": [
+            "class=",
+            "class=btn btn-ghost btn-xs btn-circle -m-1",
+            "class=fieldset py-0",
+            "class=inline flex-shrink-0 w-4 h-4 opacity-40",
+            "class=inline flex-shrink-0 w-4 h-4 opacity-40",
+            "class=input w-full",
+            "class=w-full"
+        ],
+        "prefixed": [
+            "class=",
+            "class=tw:btn tw:btn-ghost tw:btn-xs tw:btn-circle tw:-m-1",
+            "class=tw:fieldset tw:py-0",
+            "class=tw:inline tw:flex-shrink-0 tw:w-4 tw:h-4 tw:opacity-40",
+            "class=tw:inline tw:flex-shrink-0 tw:w-4 tw:h-4 tw:opacity-40",
+            "class=tw:input tw:w-full",
+            "class=tw:w-full"
+        ]
+    },
+    "pin": {
+        "unprefixed": [
+            "class=flex gap-3",
+            "class=input input-border min-w-6 max-w-12 p-0 font-bold text-xl text-center",
+            "class=input input-border min-w-6 max-w-12 p-0 font-bold text-xl text-center",
+            "class=input input-border min-w-6 max-w-12 p-0 font-bold text-xl text-center",
+            "class=input input-border min-w-6 max-w-12 p-0 font-bold text-xl text-center"
+        ],
+        "prefixed": [
+            "class=tw:flex tw:gap-3",
+            "class=tw:input tw:input-border tw:min-w-6 tw:max-w-12 tw:p-0 tw:font-bold tw:text-xl tw:text-center",
+            "class=tw:input tw:input-border tw:min-w-6 tw:max-w-12 tw:p-0 tw:font-bold tw:text-xl tw:text-center",
+            "class=tw:input tw:input-border tw:min-w-6 tw:max-w-12 tw:p-0 tw:font-bold tw:text-xl tw:text-center",
+            "class=tw:input tw:input-border tw:min-w-6 tw:max-w-12 tw:p-0 tw:font-bold tw:text-xl tw:text-center"
+        ]
+    },
+    "popover": {
+        "unprefixed": [
+            "class=w-fit cursor-pointer",
+            "class=z-[1] shadow-xl border-[length:var(--border)] border-base-content\/10 w-fit p-3 rounded-md bg-base-100"
+        ],
+        "prefixed": [
+            "class=tw:w-fit tw:cursor-pointer",
+            "class=tw:z-[1] tw:shadow-xl tw:border-[length:var(--border)] tw:border-base-content\/10 tw:w-fit tw:p-3 tw:rounded-md tw:bg-base-100"
+        ]
+    },
+    "progress": {
+        "unprefixed": [
+            "class=progress"
+        ],
+        "prefixed": [
+            "class=tw:progress"
+        ]
+    },
+    "progress-radial": {
+        "unprefixed": [
+            "class=radial-progress"
+        ],
+        "prefixed": [
+            "class=tw:radial-progress"
+        ]
+    },
+    "radio": {
+        "unprefixed": [
+            "class=fieldset py-0",
+            "class=gap-4 grid"
+        ],
+        "prefixed": [
+            "class=tw:fieldset tw:py-0",
+            "class=tw:gap-4 tw:grid"
+        ]
+    },
+    "range": {
+        "unprefixed": [
+            "class=fieldset py-0",
+            "class=range w-full"
+        ],
+        "prefixed": [
+            "class=tw:fieldset tw:py-0",
+            "class=tw:range tw:w-full"
+        ]
+    },
+    "rating": {
+        "unprefixed": [
+            "class=mask mask-star-2",
+            "class=mask mask-star-2",
+            "class=mask mask-star-2",
+            "class=mask mask-star-2",
+            "class=mask mask-star-2",
+            "class=rating gap-1",
+            "class=rating-hidden hidden"
+        ],
+        "prefixed": [
+            "class=tw:mask tw:mask-star-2",
+            "class=tw:mask tw:mask-star-2",
+            "class=tw:mask tw:mask-star-2",
+            "class=tw:mask tw:mask-star-2",
+            "class=tw:mask tw:mask-star-2",
+            "class=tw:rating tw:gap-1",
+            "class=tw:rating-hidden tw:hidden"
+        ]
+    },
+    "select": {
+        "unprefixed": [
+            "class=",
+            "class=fieldset py-0",
+            "class=select w-full",
+            "class=w-full"
+        ],
+        "prefixed": [
+            "class=",
+            "class=tw:fieldset tw:py-0",
+            "class=tw:select tw:w-full",
+            "class=tw:w-full"
+        ]
+    },
+    "select-group": {
+        "unprefixed": [
+            "class=",
+            "class=fieldset py-0",
+            "class=select w-full",
+            "class=w-full"
+        ],
+        "prefixed": [
+            "class=",
+            "class=tw:fieldset tw:py-0",
+            "class=tw:select tw:w-full",
+            "class=tw:w-full"
+        ]
+    },
+    "signature": {
+        "unprefixed": [
+            "class=",
+            "class=absolute end-2 top-1\/2 -translate-y-1\/2",
+            "class=block",
+            "class=border-[length:var(--border)] border-base-300 rounded-lg relative bg-white select-none touch-none block",
+            "class=btn btn-sm btn-ghost",
+            "class=inline flex-shrink-0 w-5 h-5",
+            "class=rounded-lg block w-full select-none touch-none",
+            "class=select-none touch-none block"
+        ],
+        "prefixed": [
+            "class=",
+            "class=tw:absolute tw:end-2 tw:top-1\/2 tw:-translate-y-1\/2",
+            "class=tw:block",
+            "class=tw:border-[length:var(--border)] tw:border-base-300 tw:rounded-lg tw:relative tw:bg-white tw:select-none tw:touch-none tw:block",
+            "class=tw:btn tw:btn-sm tw:btn-ghost",
+            "class=tw:inline tw:flex-shrink-0 tw:w-5 tw:h-5",
+            "class=tw:rounded-lg tw:block tw:w-full tw:select-none tw:touch-none",
+            "class=tw:select-none tw:touch-none tw:block"
+        ]
+    },
+    "spotlight": {
+        "unprefixed": [
+            ":class=elapsed > elapsedMax && '!h-[2px] !block'",
+            "class=-mx-1 mt-1",
+            "class=block",
+            "class=btn btn-circle btn-sm btn-ghost absolute end-2 top-2 z-[999]",
+            "class=flex",
+            "class=flex gap-3 items-center",
+            "class=flex items-center",
+            "class=flex-1",
+            "class=flex-1 overflow-hidden whitespace-nowrap text-ellipsis truncate w-0 mary-hideable",
+            "class=font-semibold truncate",
+            "class=h-[1px]",
+            "class=inline flex-shrink-0 w-5 h-5",
+            "class=inline flex-shrink-0 w-5 h-5 opacity-40",
+            "class=mary-spotlight-element",
+            "class=mb-3",
+            "class=modal backdrop-blur-sm",
+            "class=modal-backdrop",
+            "class=modal-box absolute py-0 top-0 lg:top-10 w-full lg:max-w-3xl rounded-none md:rounded-box",
+            "class=p-3 hover:bg-base-200 border-t-[length:var(--border)] border-t-base-content\/10",
+            "class=progress hidden h-[1px]",
+            "class=rounded-full w-11 h-11",
+            "class=text-base-content\/50 p-3 border-t-[length:var(--border)] border-t-base-content\/10 mary-spotlight-element",
+            "class=text-base-content\/50 text-sm truncate",
+            "class=w-full input my-2 border-none outline-none shadow-none border-transparent focus:shadow-none focus:outline-none focus:border-transparent"
+        ],
+        "prefixed": [
+            ":class=elapsed > elapsedMax && 'tw:!h-[2px] tw:!block'",
+            "class=mary-spotlight-element",
+            "class=tw:-mx-1 tw:mt-1",
+            "class=tw:block",
+            "class=tw:btn tw:btn-circle tw:btn-sm tw:btn-ghost tw:absolute tw:end-2 tw:top-2 tw:z-[999]",
+            "class=tw:flex",
+            "class=tw:flex tw:gap-3 tw:items-center",
+            "class=tw:flex tw:items-center",
+            "class=tw:flex-1",
+            "class=tw:flex-1 tw:overflow-hidden tw:whitespace-nowrap tw:text-ellipsis tw:truncate tw:w-0 mary-hideable",
+            "class=tw:font-semibold tw:truncate",
+            "class=tw:h-[1px]",
+            "class=tw:inline tw:flex-shrink-0 tw:w-5 tw:h-5",
+            "class=tw:inline tw:flex-shrink-0 tw:w-5 tw:h-5 tw:opacity-40",
+            "class=tw:mb-3",
+            "class=tw:modal tw:backdrop-blur-sm",
+            "class=tw:modal-backdrop",
+            "class=tw:modal-box tw:absolute tw:py-0 tw:top-0 tw:lg:top-10 tw:w-full tw:lg:max-w-3xl tw:rounded-none tw:md:rounded-box",
+            "class=tw:p-3 tw:hover:bg-base-200 tw:border-t-[length:var(--border)] tw:border-t-base-content\/10",
+            "class=tw:progress tw:hidden tw:h-[1px]",
+            "class=tw:rounded-full tw:w-11 tw:h-11",
+            "class=tw:text-base-content\/50 tw:p-3 tw:border-t-[length:var(--border)] tw:border-t-base-content\/10 mary-spotlight-element",
+            "class=tw:text-base-content\/50 tw:text-sm tw:truncate",
+            "class=tw:w-full tw:input tw:my-2 tw:border-none tw:outline-none tw:shadow-none tw:border-transparent tw:focus:shadow-none tw:focus:outline-none tw:focus:border-transparent"
+        ]
+    },
+    "stat": {
+        "unprefixed": [
+            "class=bg-base-100 rounded-lg px-5 py-4 w-full",
+            "class=flex items-center gap-3",
+            "class=font-black text-xl",
+            "class=text-left rtl:text-right truncate",
+            "class=text-xs text-base-content\/50 whitespace-nowrap"
+        ],
+        "prefixed": [
+            "class=tw:bg-base-100 tw:rounded-lg tw:px-5 tw:py-4 tw:w-full",
+            "class=tw:flex tw:items-center tw:gap-3",
+            "class=tw:font-black tw:text-xl",
+            "class=tw:text-left tw:rtl:text-right tw:truncate",
+            "class=tw:text-xs tw:text-base-content\/50 tw:whitespace-nowrap"
+        ]
+    },
+    "step": {
+        "unprefixed": [
+            "class=hidden",
+            "class=px-1"
+        ],
+        "prefixed": [
+            "class=tw:hidden",
+            "class=tw:px-1"
+        ]
+    },
+    "steps": {
+        "unprefixed": [
+            ":class=(index + 1 <= current) && 'step-neutral ' + step.classes",
+            "class=hidden step-primary step-error step-success step-neutral step-info step-accent",
+            "class=step",
+            "class=step-icon",
+            "class=steps [&>*:nth-child(2)]:before:hidden"
+        ],
+        "prefixed": [
+            ":class=(index + 1 <= current) && 'tw:step-neutral ' + step.classes",
+            "class=tw:hidden tw:step-primary tw:step-error tw:step-success tw:step-neutral tw:step-info tw:step-accent",
+            "class=tw:step",
+            "class=tw:step-icon",
+            "class=tw:steps tw:[&>*:nth-child(2)]:before:hidden"
+        ]
+    },
+    "swap": {
+        "unprefixed": [
+            "class=inline flex-shrink-0 swap-off h-5 w-5",
+            "class=inline flex-shrink-0 swap-on h-5 w-5",
+            "class=swap"
+        ],
+        "prefixed": [
+            "class=tw:inline tw:flex-shrink-0 tw:swap-off tw:h-5 tw:w-5",
+            "class=tw:inline tw:flex-shrink-0 tw:swap-on tw:h-5 tw:w-5",
+            "class=tw:swap"
+        ]
+    },
+    "tab": {
+        "unprefixed": [
+            ":class={ 'tab-active': selected === 'one' }",
+            "class=tab flex flex-nowrap items-center gap-3 whitespace-nowrap px-4",
+            "class=tab-content py-5 px-3 border-t-base-content\/10 block rounded-none",
+            "class=tabs tabs-border scrollbar-none flex-nowrap overflow-x-auto",
+            "x-class=scrollbar-none flex-nowrap overflow-x-auto"
+        ],
+        "prefixed": [
+            ":class={ 'tw:tab-active': selected === 'one' }",
+            "class=tw:tab tw:flex tw:flex-nowrap tw:items-center tw:gap-3 tw:whitespace-nowrap tw:px-4",
+            "class=tw:tab-content tw:py-5 tw:px-3 tw:border-t-base-content\/10 tw:block tw:rounded-none",
+            "class=tw:tabs tw:tabs-border tw:scrollbar-none tw:flex-nowrap tw:overflow-x-auto",
+            "x-class=tw:scrollbar-none tw:flex-nowrap tw:overflow-x-auto"
+        ]
+    },
+    "table": {
+        "unprefixed": [
+            "class=overflow-x-auto",
+            "class=table",
+            "class=text-base-content",
+            "x-classes=overflow-x-auto"
+        ],
+        "prefixed": [
+            "class=tw:overflow-x-auto",
+            "class=tw:table",
+            "class=tw:text-base-content",
+            "x-classes=tw:overflow-x-auto"
+        ]
+    },
+    "tabs": {
+        "unprefixed": [
+            "class=tabs tabs-border scrollbar-none flex-nowrap overflow-x-auto",
+            "x-class=scrollbar-none flex-nowrap overflow-x-auto"
+        ],
+        "prefixed": [
+            "class=tw:tabs tw:tabs-border tw:scrollbar-none tw:flex-nowrap tw:overflow-x-auto",
+            "x-class=tw:scrollbar-none tw:flex-nowrap tw:overflow-x-auto"
+        ]
+    },
+    "tags": {
+        "unprefixed": [
+            ":class=(focused || tags.length) && 'hidden'",
+            "class=",
+            "class=cursor-pointer badge badge-soft m-0.5 !inline-block mary-tags-element",
+            "class=fieldset py-0",
+            "class=inline flex-shrink-0 w-4 h-4 mb-0.5 hover:text-error",
+            "class=input w-full h-fit ps-2.5",
+            "class=text-base-content\/40",
+            "class=w-1 !inline-block",
+            "class=w-full",
+            "class=w-full py-1 min-h-9.5 content-center text-wrap"
+        ],
+        "prefixed": [
+            ":class=(focused || tags.length) && 'tw:hidden'",
+            "class=",
+            "class=tw:cursor-pointer tw:badge tw:badge-soft tw:m-0.5 tw:!inline-block mary-tags-element",
+            "class=tw:fieldset tw:py-0",
+            "class=tw:inline tw:flex-shrink-0 tw:w-4 tw:h-4 tw:mb-0.5 tw:hover:text-error",
+            "class=tw:input tw:w-full tw:h-fit tw:ps-2.5",
+            "class=tw:text-base-content\/40",
+            "class=tw:w-1 tw:!inline-block",
+            "class=tw:w-full",
+            "class=tw:w-full tw:py-1 tw:min-h-9.5 tw:content-center tw:text-wrap"
+        ]
+    },
+    "textarea": {
+        "unprefixed": [
+            "class=",
+            "class=fieldset py-0",
+            "class=textarea w-full",
+            "class=w-full"
+        ],
+        "prefixed": [
+            "class=",
+            "class=tw:fieldset tw:py-0",
+            "class=tw:textarea tw:w-full",
+            "class=tw:w-full"
+        ]
+    },
+    "theme-toggle": {
+        "unprefixed": [
+            "class=inline flex-shrink-0 w-5 h-5 swap-off",
+            "class=inline flex-shrink-0 w-5 h-5 swap-on",
+            "class=opacity-0",
+            "class=swap swap-rotate",
+            "classList.add=swap-off",
+            "classList.add=swap-on",
+            "classList.remove=swap-off",
+            "classList.remove=swap-on"
+        ],
+        "prefixed": [
+            "class=tw:inline tw:flex-shrink-0 tw:w-5 tw:h-5 tw:swap-off",
+            "class=tw:inline tw:flex-shrink-0 tw:w-5 tw:h-5 tw:swap-on",
+            "class=tw:opacity-0",
+            "class=tw:swap tw:swap-rotate",
+            "classList.add=tw:swap-off",
+            "classList.add=tw:swap-on",
+            "classList.remove=tw:swap-off",
+            "classList.remove=tw:swap-on"
+        ]
+    },
+    "timeline-item": {
+        "unprefixed": [
+            "class=!border-s-primary",
+            "class=border-s-2 ps-8 py-3 border-s-base-300 !border-s-primary",
+            "class=font-bold mb-1",
+            "class=w-4 h-4 -mb-5 -ms-[41px] rounded-full bg-base-300 !bg-primary"
+        ],
+        "prefixed": [
+            "class=tw:!border-s-primary",
+            "class=tw:border-s-2 tw:ps-8 tw:py-3 tw:border-s-base-300 tw:!border-s-primary",
+            "class=tw:font-bold tw:mb-1",
+            "class=tw:w-4 tw:h-4 tw:-mb-5 tw:-ms-[41px] tw:rounded-full tw:bg-base-300 tw:!bg-primary"
+        ]
+    },
+    "toast": {
+        "unprefixed": [
+            ":class=toast.css",
+            ":class=toast.position || 'toast-top toast-end'",
+            ":class=toast.progressClass",
+            "class=-mt-3 h-1 w-full progress",
+            "class=alert gap-2",
+            "class=font-bold",
+            "class=grid",
+            "class=hidden sm:inline-block",
+            "class=text-xs",
+            "class=toast !whitespace-normal rounded-box fixed cursor-pointer z-[999] overflow-hidden",
+            "x-classes=alert alert-success alert-warning alert-error alert-info top-10 end-10 toast toast-top toast-bottom toast-center toast-end toast-middle toast-start"
+        ],
+        "prefixed": [
+            ":class=toast.css",
+            ":class=toast.position || 'tw:toast-top tw:toast-end'",
+            ":class=toast.progressClass",
+            "class=tw:-mt-3 tw:h-1 tw:w-full tw:progress",
+            "class=tw:alert tw:gap-2",
+            "class=tw:font-bold",
+            "class=tw:grid",
+            "class=tw:hidden tw:sm:inline-block",
+            "class=tw:text-xs",
+            "class=tw:toast tw:!whitespace-normal tw:rounded-box tw:fixed tw:cursor-pointer tw:z-[999] tw:overflow-hidden",
+            "x-classes=tw:alert tw:alert-success tw:alert-warning tw:alert-error tw:alert-info tw:top-10 tw:end-10 tw:toast tw:toast-top tw:toast-bottom tw:toast-center tw:toast-end tw:toast-middle tw:toast-start"
+        ]
+    },
+    "toggle": {
+        "unprefixed": [
+            "class=",
+            "class=fieldset",
+            "class=flex gap-3 items-center cursor-pointer",
+            "class=text-sm font-medium",
+            "class=toggle",
+            "class=w-full"
+        ],
+        "prefixed": [
+            "class=",
+            "class=tw:fieldset",
+            "class=tw:flex tw:gap-3 tw:items-center tw:cursor-pointer",
+            "class=tw:text-sm tw:font-medium",
+            "class=tw:toggle",
+            "class=tw:w-full"
+        ]
+    }
+}

@@ -33,6 +33,9 @@ lg:tooltip-right
 lg:tooltip-top
 opacity-50
 text-sm
+tooltip-bottom
+tooltip-left
+tooltip-right
 w-4
 w-[calc(100%-1rem)]
 </body>
@@ -61,6 +64,9 @@ tw:lg:tooltip-right
 tw:lg:tooltip-top
 tw:opacity-50
 tw:text-sm
+tw:tooltip-bottom
+tw:tooltip-left
+tw:tooltip-right
 tw:w-4
 tw:w-[calc(100%-1rem)]
 </body>

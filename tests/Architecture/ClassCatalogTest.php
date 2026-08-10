@@ -12,11 +12,11 @@ it('extracts internal class candidates directly from the package source', functi
 
     expect($classes)->toBe($sorted)
         ->toBe(array_values(array_unique($classes)))
-        ->toHaveCount(513)
+        ->toHaveCount(518)
         ->and(hash('sha256', implode("\n", $classes)))
-        ->toBe('ad97d4826be244f5e874077ab9891be12cb813d2ee9a452b29eece26c17655fe')
+        ->toBe('47ab311198dd906f4d5f2794fac05fb9c62211681efd4ea3bd121e6ef72004fe')
         ->and($classes)
-        ->toContain('btn', 'hover:bg-base-200', '[&_.mary-hideable]:hidden')
+        ->toContain('btn', 'hover:bg-base-200', '[&_.mary-hideable]:hidden', 'max-h-64', 'max-h-96')
         ->toContain('lg:tooltip-left', 'lg:tooltip-right', 'lg:tooltip-bottom', 'lg:tooltip-top')
         ->not->toContain('right', 'right-mobile', 'true');
 });

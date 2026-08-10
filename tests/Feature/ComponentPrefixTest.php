@@ -1,57 +1,132 @@
 <?php
 
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\MessageBag;
+use Illuminate\Support\Str;
+use Illuminate\Support\ViewErrorBag;
 use Livewire\Livewire;
-use Mary\Support\ClassCandidateExtractor;
 use Mary\Tests\Support\ComponentHarness;
 
-it('prefixes every rendered internal candidate while preserving the unprefixed output mode', function (string $component, string $template) {
-    static $candidates;
+function componentClassContexts(string $html): array
+{
+    preg_match_all('/(?:^|\s)([^\s=]*class[^\s=]*)=(["\'])(.*?)\2/si', $html, $attributes, PREG_SET_ORDER);
+    preg_match_all('/classList\.(add|remove)\(\s*(["\'])(.*?)\2/si', $html, $classListCalls, PREG_SET_ORDER);
 
-    $candidates ??= ClassCandidateExtractor::fromPaths([
-        dirname(__DIR__, 2) . '/src/View/Components',
-        dirname(__DIR__, 2) . '/src/Traits/Toast.php',
-    ]);
+    $contexts = [
+        ...array_map(
+            fn (array $match): string => $match[1].'='.preg_replace('/\s+/', ' ', trim(html_entity_decode($match[3], ENT_QUOTES | ENT_HTML5))),
+            $attributes
+        ),
+        ...array_map(
+            fn (array $match): string => 'classList.'.$match[1].'='.preg_replace('/\s+/', ' ', trim(html_entity_decode($match[3], ENT_QUOTES | ENT_HTML5))),
+            $classListCalls
+        ),
+    ];
 
-    $classContexts = static function (string $html): string {
-        $html = html_entity_decode($html, ENT_QUOTES | ENT_HTML5);
-        preg_match_all('/(?:^|\s)[^\s=]*class[^\s=]*=(["\'])(.*?)\1/si', $html, $attributes);
-        preg_match_all('/classList\.(?:add|remove)\(\s*(["\'])(.*?)\1/si', $html, $classListCalls);
+    sort($contexts);
 
-        return implode("\n", [...$attributes[2], ...$classListCalls[2]]);
-    };
+    return $contexts;
+}
 
-    $containsToken = static function (string $contexts, string $candidate): bool {
-        $pattern = '/(?:^|[\s"\'=])'.preg_quote($candidate, '/') . '(?=$|[\s"\'<>;,)])/m';
+function componentContextsContainToken(array $contexts, string $candidate): bool
+{
+    $pattern = '/(?:^|[\s"\'=])'.preg_quote($candidate, '/').'(?=$|[\s"\'<>;,)])/m';
 
-        return preg_match($pattern, $contexts) === 1;
-    };
+    return preg_match($pattern, implode("\n", $contexts)) === 1;
+}
 
-    config()->set('mary.tailwind_prefix', null);
-    $unprefixed = Livewire::test(ComponentHarness::class, ['template' => $template])->html();
+it('has a render fixture for every component except the separately tested calendar', function () {
+    $aliases = [
+        'Colorpicker' => 'colorpicker',
+        'DatePicker' => 'datepicker',
+        'DateTime' => 'datetime',
+    ];
+    $components = [];
 
-    config()->set('mary.tailwind_prefix', 'tw');
-    $prefixed = Livewire::test(ComponentHarness::class, ['template' => $template])->html();
-    $unprefixedContexts = $classContexts($unprefixed);
-    $prefixedContexts = $classContexts($prefixed);
+    foreach (glob(dirname(__DIR__, 2).'/src/View/Components/*.php') as $path) {
+        $class = pathinfo($path, PATHINFO_FILENAME);
 
-    $renderedCandidates = array_values(array_filter(
-        $candidates,
-        fn (string $candidate): bool => $containsToken($unprefixedContexts, $candidate)
-    ));
-
-    expect($unprefixed)->not->toBe('')
-        ->and($renderedCandidates)->not->toBeEmpty();
-
-    foreach ($renderedCandidates as $candidate) {
-        expect($containsToken($prefixedContexts, 'tw:'.$candidate))
-            ->toBeTrue("[{$component}] Missing prefixed candidate [tw:{$candidate}].")
-            ->and($containsToken($prefixedContexts, $candidate))
-            ->toBeFalse("[{$component}] Internal candidate remained unprefixed [{$candidate}].");
+        if ($class !== 'Calendar') {
+            $components[] = $aliases[$class] ?? Str::kebab($class);
+        }
     }
 
-    expect($component)->not->toBe('');
-})->with('components');
+    sort($components);
+    $fixtures = array_keys(require dirname(__DIR__).'/Fixtures/ComponentRenderCases.php');
+    sort($fixtures);
+
+    expect($fixtures)->toBe($components);
+});
+
+it('matches the independently stored class-context fixture for every component', function () {
+    $contracts = [];
+
+    foreach (require dirname(__DIR__).'/Fixtures/ComponentRenderCases.php' as $component => $template) {
+        foreach (['unprefixed' => null, 'prefixed' => 'tw'] as $mode => $prefix) {
+            config()->set('mary.tailwind_prefix', $prefix);
+            $html = Livewire::test(ComponentHarness::class, ['template' => $template])->html();
+            $contexts = componentClassContexts($html);
+
+            expect($html)->not->toBe('')
+                ->and($contexts)->not->toBeEmpty("[{$component}] No rendered class context was captured.");
+
+            $contracts[$component][$mode] = $contexts;
+        }
+    }
+
+    $fixture = json_decode(
+        file_get_contents(dirname(__DIR__).'/Fixtures/ComponentClassContexts.json'),
+        true,
+        512,
+        JSON_THROW_ON_ERROR
+    );
+
+    expect($contracts)->toBe($fixture);
+});
+
+it('prefixes conditional states while preserving fixture-defined consumer classes', function (array $case) {
+    $errors = new ViewErrorBag;
+    $errors->put('default', new MessageBag($case['errors'] ?? []));
+
+    view()->share('errors', $errors);
+
+    foreach (['unprefixed' => null, 'prefixed' => 'tw'] as $mode => $prefix) {
+        config()->set('mary.tailwind_prefix', $prefix);
+        $html = ($case['livewire'] ?? false)
+            ? Livewire::test(ComponentHarness::class, ['template' => $case['template']])->html()
+            : Blade::render($case['template']);
+        $contexts = componentClassContexts($html);
+
+        foreach ($case['internal'] as $candidate) {
+            $expected = $prefix === null ? $candidate : 'tw:'.$candidate;
+
+            expect(componentContextsContainToken($contexts, $expected))
+                ->toBeTrue("[{$mode}] Missing internal conditional class [{$expected}].");
+
+            if ($prefix !== null) {
+                expect(componentContextsContainToken($contexts, $candidate))
+                    ->toBeFalse("[{$mode}] Internal conditional class remained unprefixed [{$candidate}].");
+            }
+        }
+
+        foreach ($case['raw'] ?? [] as $candidate) {
+            expect(componentContextsContainToken($contexts, $candidate))
+                ->toBeTrue("[{$mode}] Missing consumer class [{$candidate}].")
+                ->and(componentContextsContainToken($contexts, 'tw:'.$candidate))
+                ->toBeFalse("[{$mode}] Consumer class was prefixed [tw:{$candidate}].");
+        }
+
+        foreach ($case['absent'] ?? [] as $candidate) {
+            expect(componentContextsContainToken($contexts, $candidate))
+                ->toBeFalse("[{$mode}] Suppressed default class was rendered [{$candidate}].")
+                ->and(componentContextsContainToken($contexts, 'tw:'.$candidate))
+                ->toBeFalse("[{$mode}] Suppressed default class was rendered [tw:{$candidate}].");
+        }
+    }
+})->with(array_map(
+    fn (array $case): array => [$case],
+    require dirname(__DIR__).'/Fixtures/ComponentStateCases.php'
+));
 
 it('prefixes calendar classes embedded in setup JSON and popup markup', function () {
     $events = [[
@@ -136,77 +211,3 @@ it('keeps dynamically composed tooltip positions unchanged', function (?string $
     'without prefix' => [null, ''],
     'with prefix' => ['tw', 'tw:'],
 ]);
-
-dataset('components', function () {
-    return [
-        'accordion' => ['accordion', '<x-accordion />'],
-        'alert' => ['alert', '<x-alert title="Alert" />'],
-        'avatar' => ['avatar', '<x-avatar />'],
-        'badge' => ['badge', '<x-badge value="1" />'],
-        'breadcrumbs' => ['breadcrumbs', '<x-breadcrumbs :items="[]" />'],
-        'button' => ['button', '<x-button>Button</x-button>'],
-        'card' => ['card', '<x-card>Card</x-card>'],
-        'carousel' => ['carousel', '<x-carousel :slides="[]" />'],
-        'chart' => ['chart', '<x-chart wire:model="chart" />'],
-        'checkbox' => ['checkbox', '<x-checkbox />'],
-        'choices' => ['choices', '<x-choices wire:model="choice" />'],
-        'choices-offline' => ['choices-offline', '<x-choices-offline wire:model="choice" :options="[]" />'],
-        'code' => ['code', '<x-code value="code" />'],
-        'collapse' => ['collapse', '<x-collapse :heading="$this->slot(\'Heading\')" :content="$this->slot(\'Content\')" />'],
-        'colorpicker' => ['colorpicker', '<x-colorpicker wire:model="color" />'],
-        'datepicker' => ['datepicker', '<x-datepicker wire:model="date" />'],
-        'datetime' => ['datetime', '<x-datetime wire:model="date" />'],
-        'diff' => ['diff', '<x-diff />'],
-        'drawer' => ['drawer', '<x-drawer wire:model="drawer">Drawer</x-drawer>'],
-        'dropdown' => ['dropdown', '<x-dropdown>Menu</x-dropdown>'],
-        'editor' => ['editor', '<x-editor wire:model="text" />'],
-        'errors' => ['errors', '<x-errors />'],
-        'file' => ['file', '<x-file wire:model="file" />'],
-        'form' => ['form', '<x-form>Form</x-form>'],
-        'group' => ['group', '<x-group>Group</x-group>'],
-        'header' => ['header', '<x-header title="Title" />'],
-        'hr' => ['hr', '<x-hr />'],
-        'icon' => ['icon', '<x-icon name="o-home" />'],
-        'image-gallery' => ['image-gallery', '<x-image-gallery :images="[]" />'],
-        'image-library' => ['image-library', '<x-image-library wire:model="images" />'],
-        'input' => ['input', '<x-input wire:model="name" />'],
-        'kbd' => ['kbd', '<x-kbd>Ctrl</x-kbd>'],
-        'list-item' => ['list-item', '<x-list-item :item="[\'name\' => \'Mary\']" />'],
-        'loading' => ['loading', '<x-loading />'],
-        'main' => ['main', '<x-main><x-slot:content>Main</x-slot:content></x-main>'],
-        'markdown' => ['markdown', '<x-markdown wire:model="text" />'],
-        'menu' => ['menu', '<x-menu>Menu</x-menu>'],
-        'menu-item' => ['menu-item', '<x-menu-item title="Item" />'],
-        'menu-separator' => ['menu-separator', '<x-menu-separator />'],
-        'menu-sub' => ['menu-sub', '<x-menu-sub title="Sub"><x-menu-item title="Item" /></x-menu-sub>'],
-        'menu-title' => ['menu-title', '<x-menu-title title="Title" />'],
-        'modal' => ['modal', '<x-modal wire:model="modal">Modal</x-modal>'],
-        'nav' => ['nav', '<x-nav />'],
-        'pagination' => ['pagination', '<x-pagination :rows="$this->paginator()" />'],
-        'password' => ['password', '<x-password wire:model="password" />'],
-        'pin' => ['pin', '<x-pin :size="4" wire:model="pin" />'],
-        'popover' => ['popover', '<x-popover><x-slot:trigger>Trigger</x-slot:trigger><x-slot:content>Content</x-slot:content></x-popover>'],
-        'progress' => ['progress', '<x-progress />'],
-        'progress-radial' => ['progress-radial', '<x-progress-radial value="50" />'],
-        'radio' => ['radio', '<x-radio wire:model="radio" :options="[]" />'],
-        'range' => ['range', '<x-range wire:model="range" />'],
-        'rating' => ['rating', '<x-rating wire:model="rating" />'],
-        'select' => ['select', '<x-select wire:model="select" :options="[]" />'],
-        'select-group' => ['select-group', '<x-select-group wire:model="select" :options="[]" />'],
-        'signature' => ['signature', '<x-signature wire:model="signature" />'],
-        'spotlight' => ['spotlight', '<x-spotlight />'],
-        'stat' => ['stat', '<x-stat title="Stat" />'],
-        'step' => ['step', '<x-step :step="1" text="One" />'],
-        'steps' => ['steps', '<x-steps>Steps</x-steps>'],
-        'swap' => ['swap', '<x-swap>Swap</x-swap>'],
-        'tab' => ['tab', '<x-tabs><x-tab name="one" label="One">Tab</x-tab></x-tabs>'],
-        'table' => ['table', '<x-table :headers="[]" :rows="[]" />'],
-        'tabs' => ['tabs', '<x-tabs>Tabs</x-tabs>'],
-        'tags' => ['tags', '<x-tags wire:model="tags" />'],
-        'textarea' => ['textarea', '<x-textarea wire:model="text" />'],
-        'theme-toggle' => ['theme-toggle', '<x-theme-toggle />'],
-        'timeline-item' => ['timeline-item', '<x-timeline-item title="Event" />'],
-        'toast' => ['toast', '<x-toast />'],
-        'toggle' => ['toggle', '<x-toggle wire:model="toggle" />'],
-    ];
-});
