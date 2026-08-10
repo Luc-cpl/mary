@@ -419,7 +419,9 @@ class ChoicesOffline extends Component
                         <div x-cloak x-show="focused" class="{{ Mary::classes('relative') }}" wire:key="options-list-main-{{ $uuid }}" >
                                 <div
                                     wire:key="options-list-{{ $uuid }}"
-                                    class="{{ Mary::classes('w-full absolute z-10 shadow-xl bg-base-100 border border-base-content/10 rounded-lg cursor-pointer overflow-y-auto')->addRaw($height) }}"
+                                    class="{{ Mary::classes('w-full absolute z-10 shadow-xl bg-base-100 border border-base-content/10 rounded-lg cursor-pointer overflow-y-auto')
+                                        ->add($height === 'max-h-64' ? 'max-h-64' : null)
+                                        ->addRaw($height !== 'max-h-64' ? $height : null) }}"
                                     x-anchor.bottom-start="$refs.container"
                                 >
 
